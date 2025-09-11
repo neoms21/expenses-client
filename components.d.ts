@@ -15,6 +15,8 @@ declare module 'vue' {
     DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Drawer: typeof import('primevue/drawer')['default']
+    FileUpload: typeof import('primevue/fileupload')['default']
+    FileUploadDialog: typeof import('./src/components/FileUploadDialog.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
@@ -23,6 +25,7 @@ declare module 'vue' {
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
     IftaLabel: typeof import('primevue/iftalabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     RadioButton: typeof import('primevue/radiobutton')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -30,6 +33,7 @@ declare module 'vue' {
     TheDrawer: typeof import('./src/components/TheDrawer.vue')['default']
     TheReports: typeof import('./src/components/TheReports.vue')['default']
     TheTimeline: typeof import('./src/components/TheTimeline.vue')['default']
+    Toast: typeof import('primevue/toast')['default']
     Tree: typeof import('primevue/tree')['default']
   }
   export interface GlobalDirectives {

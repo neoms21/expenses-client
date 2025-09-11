@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import TheDrawer from '@/components/TheDrawer.vue';
 import TheReports from '@/components/TheReports.vue';
 import TheTimeline from '@/components/TheTimeline.vue';
 </script>
