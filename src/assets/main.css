@@ -29,6 +29,9 @@ a,
   }
 }
 
+body {
+  font-size: 13px;
+}
 /* @media (min-width: 1024px) {
   body {
     display: flex;

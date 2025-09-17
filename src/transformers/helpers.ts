@@ -1,11 +1,7 @@
 import type { Category } from '@/types';
 
-const existsInList = (val: string, arr: string[]) => {
-  const found = arr.find((a) => val.trim().toLowerCase().indexOf(a.toLowerCase()) !== -1);
-  if (found) return true;
-
-  return false;
-};
+const existsInList = (val: string, arr: string[]) =>
+  arr.find((a) => val.trim().toLowerCase().indexOf(a.toLowerCase()) !== -1);
 
 export const assignCategory = (
   description: string,
