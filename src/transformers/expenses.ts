@@ -6,7 +6,7 @@ import ShortUniqueId from 'short-unique-id';
 import { assignCategory } from './helpers';
 
 export const categoriseExpenses = (
-  expenses: Array<Omit<Expense, 'category'>>,
+  expenses: Array<Omit<Expense, 'category' | 'differentiator' | 'tags'>>,
   categories: Category[],
 ): Array<CategorisedExpenses> => {
   if (expenses.length === 0) return [];

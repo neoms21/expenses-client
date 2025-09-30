@@ -33,7 +33,7 @@ export const useExpenses = (
     }),
     structuralSharing: false,
     enabled: computed(() => selectedInputs.value?.length > 0),
-    queryFn: () => fetchExpenses(extractFromTreeNodes(selectedInputs.value)),
+    queryFn: () => fetchExpenses(extractFromTreeNodes(selectedInputs.value), ''),
     select: (data) => {
       const allCategories = [...categories.value?.data];
 
@@ -43,6 +43,22 @@ export const useExpenses = (
 
       return categoriseExpenses(data.data || [], allCategories);
     },
+    staleTime: Infinity,
+  });
+
+  return { data, refetch };
+};
+
+export const useExpensesByCategory = (selectedInputs: Ref<string[]>, category: Ref<string>) => {
+  console.log('🚀 ~ useExpensesByCategory ~ category:', category);
+  const { data, refetch } = useQuery({
+    queryKey: computed(() => {
+      return [`expenses-${selectedInputs.value}-${category.value}`];
+    }),
+    structuralSharing: false,
+    enabled: computed(() => selectedInputs.value?.length > 0 && !!category.value),
+    queryFn: () => fetchExpenses(extractFromTreeNodes(selectedInputs.value), category.value),
+    // select: (data) => {},
     staleTime: Infinity,
   });
 
