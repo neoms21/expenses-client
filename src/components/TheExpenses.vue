@@ -1,39 +1,57 @@
 <script setup lang="ts">
 import { useReportInputs } from '@/composables/useReportInputs';
-import { useCategories } from '@/hooks/useCategories';
 import { useExpensesByCategory } from '@/hooks/useExpenses';
-import type { Category, ExpenseView } from '@/types';
+import type { Category, UiExpense } from '@/types';
 import { ref, toRef } from 'vue';
+import TheCategories2 from './TheCategories2.vue';
+import { useUpdateCategoryOnExpenses } from '@/hooks/useCategories';
 
 const props = defineProps(['category']);
-
+const selectedExpenses = ref<Array<UiExpense>>([]);
 const { inputs } = useReportInputs();
 
-const { data } = useExpensesByCategory(inputs, toRef(props, 'category'));
-const { data: categories } = useCategories();
+const { data, refetch } = useExpensesByCategory(inputs, toRef(props, 'category'));
 const newOrUpdatedCategory = ref<Category>();
 
 // const { data, refetch } = useExpenses(inputs, categories, newOrUpdatedCategory);
 
 const visible = ref(false);
 
-let selectedExpense: ExpenseView;
-function showCategories(data: ExpenseView) {
+let selectedExpense: UiExpense;
+
+function showCategories(data: UiExpense) {
   selectedExpense = data;
   visible.value = true;
 }
 
-const handleSuccessfulSave = async (val) => {
-  newOrUpdatedCategory.value = val;
-  // await refetch();
-  visible.value = false;
+const { mutate: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
+
+const onCategoryAssignment = async (category: string) => {
+  await updateCategoryOnExpenses({
+    category,
+    expenseIds: selectedExpenses.value.map((expense) => expense.id),
+  });
+
+  setTimeout(async () => {
+    await refetch();
+    visible.value = false;
+  }, 500);
 };
 </script>
 
 <template>
-  <h4>{{ category }} - {{ data?.data?.length }}</h4>
-
-  <DataTable :value="data?.data">
+  <div class="flex justify-content-center gap-5">
+    <Button
+      size="small"
+      variant="text"
+      :disabled="!selectedExpenses?.length"
+      v-show="props.category === 'Unknown'"
+      v-on:click="showCategories(selectedExpenses?.[0])"
+      >Assign Category</Button
+    >
+  </div>
+  <DataTable v-model:selection="selectedExpenses" :value="data?.data">
+    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
     <Column field="description" header="Description" sortable></Column>
     <Column field="amount" header="Amount" sortable>
       <template #body="props">
@@ -45,10 +63,11 @@ const handleSuccessfulSave = async (val) => {
 
   <Dialog
     v-model:visible="visible"
-    header="Assign Category"
+    :header="`Assign Category to ${selectedExpenses?.length} expenses`"
     :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
   >
-    <TheCategories :expense="selectedExpense" @on-successful-save="handleSuccessfulSave" />
+    <!-- <TheCategories :expense="selectedExpense" @on-successful-save="handleSuccessfulSave" /> -->
+    <TheCategories2 :expenses="selectedExpenses" @on-category-assignment="onCategoryAssignment" />
   </Dialog>
 </template>

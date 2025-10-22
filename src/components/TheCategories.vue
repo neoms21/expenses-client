@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { defineProps, ref } from 'vue';
-import type { Category, ExpenseView } from '@/types';
+import type { Category, UiExpense } from '@/types';
 import { useCategories, useInsertCategory, useUpdateCategory } from '@/hooks/useCategories';
 import { extractTagsFromDescription } from '@/utils/extractTags';
 
 const props = defineProps<{
-  expense: ExpenseView;
+  expense: UiExpense;
 }>();
 
 // Define the emit event
@@ -34,8 +34,9 @@ const saveExpenseToCategory = async () => {
     });
   } else if (selectedCategory.value) {
     await updateCategory({
-      id: selectedCategory.value.id,
-      items: [...selectedCategory.value.items, ...selectedTags.value],
+      category: selectedCategory.value,
+
+      newItems: selectedTags.value,
     });
 
     emit('onSuccessfulSave', {
@@ -58,7 +59,7 @@ const isSaveDisabled = () => {
       <div class="flex flex-col gap-2">
         <div class="flex gap-3">
           <h4 class="font-bold">Description:</h4>
-          <span>{{ expense.description }}</span>
+          <span>{{ expense.description }} - {{ expense.amount }} </span>
         </div>
         <div class="flex gap-3 items-center">
           <h4 class="font-bold">Tags:</h4>

@@ -15,6 +15,15 @@
   font-weight: normal;
 }
 
+/* @layer base {
+  h1 {
+    font-size: var(--text-2xl);
+  }
+  h4 {
+    font-size: var(--text-xl);
+  }
+} */
+
 a,
 .green {
   text-decoration: none;

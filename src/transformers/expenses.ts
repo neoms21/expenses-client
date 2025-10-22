@@ -1,4 +1,4 @@
-import type { CategorisedExpenses, Category, Expense, ExpenseView, StrictTreeNode } from '@/types';
+import type { CategorisedExpenses, Category, Expense, UiExpense, StrictTreeNode } from '@/types';
 import Decimal from 'decimal.js';
 import { groupBy } from 'lodash';
 import { format } from 'date-fns';

@@ -1,9 +1,7 @@
 import type { ExpensesInput } from '@/composables/useReportInputs';
-import { fetchCategoryExpenses, fetchExpenses } from '@/lib/expenses';
-import { categoriseExpenses } from '@/transformers';
+import { fetchCategoryExpenses } from '@/lib/expenses';
 import { useQuery } from '@tanstack/vue-query';
-import { computed, type Ref, type ref } from 'vue';
-import { useCategories } from '@/hooks/useCategories';
+import { computed, type Ref } from 'vue';
 import type { Category } from '@/types';
 import ShortUniqueId from 'short-unique-id';
 

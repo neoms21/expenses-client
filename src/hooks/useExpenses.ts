@@ -1,9 +1,8 @@
 import type { ExpensesInput } from '@/composables/useReportInputs';
 import { fetchExpenses } from '@/lib/expenses';
-import { categoriseExpenses } from '@/transformers';
+
 import { useQuery } from '@tanstack/vue-query';
 import { computed, type Ref, type ref } from 'vue';
-import { useCategories } from '@/hooks/useCategories';
 import type { Category } from '@/types';
 
 const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
@@ -22,35 +21,7 @@ const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   return { years: Array.from(x.years), months: Array.from(x.months), cards: Array.from(x.cards) };
 };
 
-export const useExpenses = (
-  selectedInputs: Ref<string[]>,
-  categories: Ref,
-  upsertedCategory: Ref<Category | undefined>,
-) => {
-  const { data, refetch } = useQuery({
-    queryKey: computed(() => {
-      return [`expenses-${selectedInputs.value}`];
-    }),
-    structuralSharing: false,
-    enabled: computed(() => selectedInputs.value?.length > 0),
-    queryFn: () => fetchExpenses(extractFromTreeNodes(selectedInputs.value), ''),
-    select: (data) => {
-      const allCategories = [...categories.value?.data];
-
-      if (upsertedCategory?.value) {
-        allCategories.push(upsertedCategory.value);
-      }
-
-      return categoriseExpenses(data.data || [], allCategories);
-    },
-    staleTime: Infinity,
-  });
-
-  return { data, refetch };
-};
-
 export const useExpensesByCategory = (selectedInputs: Ref<string[]>, category: Ref<string>) => {
-  console.log('🚀 ~ useExpensesByCategory ~ category:', category);
   const { data, refetch } = useQuery({
     queryKey: computed(() => {
       return [`expenses-${selectedInputs.value}-${category.value}`];

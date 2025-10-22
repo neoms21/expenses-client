@@ -15,7 +15,6 @@ onMounted(async () => {
 </script>
 <template>
   <div class="card flex flex-col flex-wrap justify-content-center gap-5">
-    <h2 class="text-center">Timelines</h2>
     <div class="flex-1 flex flex-column gap-5">
       <Tree
         v-model:selectionKeys="selectedKey"
