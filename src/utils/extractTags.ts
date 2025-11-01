@@ -1,4 +1,4 @@
-export const extractTagsFromDescription = (description: string) =>
+export const extractTagsFromDescription = (description: string = '') =>
   description
     .split(' ')
     .filter((a) => a.length > 2 && a.trim() && !a.match(/\d{1,9}/g))

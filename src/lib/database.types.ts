@@ -106,6 +106,14 @@ export type Database = {
         }
         Relationships: []
       }
+      get_dashboard: {
+        Row: {
+          amount: number | null
+          category: string | null
+          year: number | null
+        }
+        Relationships: []
+      }
       timeline: {
         Row: {
           card: string | null
@@ -117,16 +125,23 @@ export type Database = {
       }
     }
     Functions: {
-      category_expenses: {
-        Args:
-          | { card_list: string[]; month_list: string[] }
-          | { month_list: string[] }
-        Returns: {
-          category: string
-          count: number
-          total: number
-        }[]
-      }
+      category_expenses:
+        | {
+            Args: { month_list: string[] }
+            Returns: {
+              category: string
+              count: number
+              total: number
+            }[]
+          }
+        | {
+            Args: { card_list: string[]; month_list: string[] }
+            Returns: {
+              category: string
+              count: number
+              total: number
+            }[]
+          }
       get_expenses_by_month: {
         Args: { month_list: string[] }
         Returns: {

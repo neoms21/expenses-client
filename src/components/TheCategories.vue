@@ -1,12 +1,22 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { defineProps, ref } from 'vue';
 import type { Category, UiExpense } from '@/types';
 import { useCategories, useInsertCategory, useUpdateCategory } from '@/hooks/useCategories';
 import { extractTagsFromDescription } from '@/utils/extractTags';
 
-const props = defineProps<{
-  expense: UiExpense;
-}>();
+import { inject, onMounted } from 'vue';
+
+const dialogRef: any = inject('dialogRef');
+const expense = ref<UiExpense>();
+onMounted(() => {
+  const params = dialogRef.value.data; // {user: 'primetime'}
+  expense.value = params.expense;
+});
+
+// const props = defineProps<{
+//   expense: UiExpense;
+//   temp: number;
+// }>();
 
 // Define the emit event
 const emit = defineEmits(['onSuccessfulSave']);
@@ -15,7 +25,7 @@ const { data: result } = useCategories();
 const { mutate: insertCategory } = useInsertCategory();
 const { mutate: updateCategory } = useUpdateCategory();
 
-const tags = ref(extractTagsFromDescription(props.expense.description));
+const tags = ref(extractTagsFromDescription(expense.value?.description));
 
 const selectedTags = ref([]);
 const selectedCategory = ref<Category>();
@@ -59,7 +69,7 @@ const isSaveDisabled = () => {
       <div class="flex flex-col gap-2">
         <div class="flex gap-3">
           <h4 class="font-bold">Description:</h4>
-          <span>{{ expense.description }} - {{ expense.amount }} </span>
+          <span>{{ expense?.description }} - {{ expense?.amount }} </span>
         </div>
         <div class="flex gap-3 items-center">
           <h4 class="font-bold">Tags:</h4>
@@ -88,7 +98,7 @@ const isSaveDisabled = () => {
           />
           <label :for="category.category" class="font-bold">{{ category.category }}</label>
 
-          <div>{{ category.items.join(', ') }}</div>
+          <div>{{ category.items?.join(', ') }}</div>
         </div>
       </div>
       <h2 class="text-2xl my-2">OR</h2>
@@ -103,4 +113,4 @@ const isSaveDisabled = () => {
       </div>
     </div>
   </div>
-</template>
+</template> -->

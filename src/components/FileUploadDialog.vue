@@ -4,7 +4,6 @@ import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { Dialogs, useDialogStore } from '@/stores/dialogs';
 import type { FileUploadUploadEvent } from 'primevue';
-const visible = ref(true);
 const toast = useToast();
 const fileupload = ref();
 

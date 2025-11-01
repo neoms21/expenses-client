@@ -32,31 +32,32 @@ export const fetchCategoryExpenses = async (params: ExpensesInput) => {
   return { data, error };
 };
 
-export const temp_update_expenses = async () => {
-  // const { data, error } = await supabase
-  //   .from('expenses')
-  //   .select('id, category')
-  //   .filter('tags', 'is', null);
-  // // if (error
-  // // .gte('amount', 0)
-  // // .lte('amount', 0.48);
-  // for (const expense of data!) {
-  //   const { data, error } = await supabase
-  //     .from('expenses')
-  //     .update({ tags: [expense.category.toLowerCase()] })
-  //     .eq('id', expense.id);
-  // }
-  // await
-};
-
 export const updateCategoryOnExpenses = async (category: string, expenseIds: string[]) => {
   const { data, error } = await supabase.from('expenses').update({ category }).in('id', expenseIds);
-  console.log('🚀 ~ updateCategoryOnExpenses ~ data:', data);
 };
-// for (const expense of data!) {
-//   const { data, error } = await supabase
-//     .from('expenses')
-//     .update({ tags: [expense.category.toLowerCase()] })
-//     .eq('id', expense.id);
-// }
-// };
+
+export const fetchDashboardData = async () => {
+  return await supabase.from('get_dashboard').select('*');
+};
+
+export const fetchCategorisedExpensesByMonths = async (category: string) => {
+  const { data, error } = await supabase
+    .from('expenses')
+    .select('month, amount.sum()')
+    .gt('amount', 0)
+    .eq('category', category);
+
+  return { data, error };
+};
+
+export const fetchExpensesByMonth = async (month: string, category: string) => {
+  const { data, error } = await supabase
+    .from('expenses')
+    .select('month, description, amount, id')
+    .gt('amount', 0)
+    .eq('month', month)
+    .eq('category', category)
+    .order('amount', { ascending: false });
+
+  return { data, error };
+};

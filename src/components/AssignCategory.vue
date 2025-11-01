@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
-import type { Category, UiExpense } from '@/types';
+import type { Category } from '@/types';
 import { useCategories } from '@/hooks/useCategories';
 import { useToast } from 'primevue';
+import { ref } from 'vue';
 const toast = useToast();
 
-const props = defineProps<{
-  expenses: Array<UiExpense>;
-}>();
-
 // Define the emit event
-const emit = defineEmits(['onCategoryAssignment']);
+const emit = defineEmits(['categoryAssignment']);
 const { data: result } = useCategories();
 
 const selectedCategory = ref<Category>();
@@ -29,7 +25,7 @@ const saveExpenseToCategory = async () => {
     return;
   }
 
-  emit('onCategoryAssignment', newCategory.value || selectedCategory?.value?.category);
+  emit('categoryAssignment', newCategory.value || selectedCategory?.value?.category);
 };
 </script>
 <template>

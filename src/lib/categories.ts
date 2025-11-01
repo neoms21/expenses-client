@@ -7,7 +7,6 @@ export const fetchCategories = async (): Promise<{
   error: PostgrestError | null;
 }> => {
   const { data, error } = await supabase.from('categories_from_expenses').select('*');
-  console.log('🚀 ~ fetchCategories ~ data:', data);
 
   if (error) {
     console.error('Error fetching categories:', error);

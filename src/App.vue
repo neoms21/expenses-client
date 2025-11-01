@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import HeaderView from './views/HeaderView.vue';
-import { useDialogStore, Dialogs } from './stores/dialogs';
-
-const { dialogsVisibility } = useDialogStore();
-// import 'primeicons/primeicons.css';
 </script>
 
 <template>
@@ -16,6 +12,7 @@ const { dialogsVisibility } = useDialogStore();
   <div class="w-full m-auto lg:max-w-8/10 px-4">
     <RouterView />
   </div>
+  <DynamicDialog />
 </template>
 
 <style scoped>

@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ExpensesDashboard from '@/components/ExpensesDashboard.vue';
+</script>
 
 <template>
-  <div>Dashboard</div>
+  <ExpensesDashboard />
 </template>
