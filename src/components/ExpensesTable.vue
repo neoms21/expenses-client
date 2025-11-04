@@ -84,6 +84,7 @@ const handleCategoryChange = async (expenseId: string, event: SelectChangeEvent)
       <Column selectionMode="multiple" headerStyle="width: 1rem"></Column>
       <Column field="description" header="Description" header-style="width: 50%" />
       <Column field="amount" header="Amount" />
+      <Column field="date" header="Date" />
       <Column header="Assign Category">
         <template #body="slotProps">
           <Select

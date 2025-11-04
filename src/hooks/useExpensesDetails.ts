@@ -23,10 +23,6 @@ export const useExpensesDetails = (category: Ref<string>) => {
     structuralSharing: false,
     queryFn: () => fetchCategorisedExpensesByMonths(category.value),
     select: (data) => {
-      //   const orderedData = Months_In_Order.map((month) =>
-      //     (data.data || []).find((d) => d.month === month),
-      //   ).filter(Boolean);
-
       const orderedData = data.data
         ?.filter((d) => Months_In_Order.includes(d.month))
         .sort((a, b) => {

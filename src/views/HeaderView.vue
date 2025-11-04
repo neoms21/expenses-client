@@ -52,7 +52,6 @@ const items = ref([
     label: 'Upload Statement',
     icon: 'pi pi-upload',
     command: () => {
-      console.log('in Command');
       setVisibility(Dialogs.StatementsUpload, true);
     },
   },

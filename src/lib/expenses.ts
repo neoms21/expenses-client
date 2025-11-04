@@ -53,7 +53,7 @@ export const fetchCategorisedExpensesByMonths = async (category: string) => {
 export const fetchExpensesByMonth = async (month: string, category: string) => {
   const { data, error } = await supabase
     .from('expenses')
-    .select('month, description, amount, id')
+    .select('month, description, amount, id, date')
     .gt('amount', 0)
     .eq('month', month)
     .eq('category', category)

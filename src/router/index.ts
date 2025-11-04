@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import TestView from '@/views/TestView.vue';
-import TheReports from '@/components/TheReports.vue';
 import Dashboard from '@/views/Dashboard.vue';
 import ExpenseDetails from '@/views/ExpenseDetails.vue';
 
