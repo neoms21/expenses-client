@@ -11,9 +11,13 @@ export default mergeConfig(
     plugins: [viteTsconfigPaths()],
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**'],
+      exclude: [...configDefaults.exclude, 'e2e/**', 'src/components/temp.test.ts'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       setupFiles: ['./setup.ts'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html'],
+      },
     },
     // resolve: {
     //   alias: {
