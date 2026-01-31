@@ -13,7 +13,6 @@ export const assignCategory = (
 ): string => {
   for (const { category, items } of categories) {
     if (tags.length > 0) {
-      console.log('in tags', tags);
       if (category.toLowerCase().indexOf(tags[0].toLowerCase()) !== -1) return category;
     } else if (existsInList(description, items)) return category;
   }

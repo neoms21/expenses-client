@@ -1,7 +1,6 @@
 import type { CategorisedExpenses, Category, Expense, UiExpense, StrictTreeNode } from '@/types';
 import Decimal from 'decimal.js';
 import { groupBy } from 'lodash';
-import { format } from 'date-fns';
 import ShortUniqueId from 'short-unique-id';
 import { assignCategory } from './helpers';
 

@@ -1,5 +1,5 @@
 import { expect, describe, test } from 'vitest';
-import { categoriseExpenses } from '@/transformers';
+import { categoriseExpenses } from '../../transformers';
 
 describe('Expenses transformer', () => {
   test('should categorise the expenses', () => {
