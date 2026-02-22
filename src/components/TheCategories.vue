@@ -1,5 +1,5 @@
-<!-- <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import type { Category, UiExpense } from '@/types';
 import { useCategories, useInsertCategory, useUpdateCategory } from '@/hooks/useCategories';
 import { extractTagsFromDescription } from '@/utils/extractTags';
@@ -113,4 +113,4 @@ const isSaveDisabled = () => {
       </div>
     </div>
   </div>
-</template> -->
+</template>

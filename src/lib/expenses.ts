@@ -23,6 +23,7 @@ export const fetchCategoryExpenses = async (params: ExpensesInput) => {
   const { data, error } = await supabase.rpc('category_expenses', {
     month_list: params.months,
     card_list: params.cards,
+    year_list: params.years,
   });
 
   if (error) {

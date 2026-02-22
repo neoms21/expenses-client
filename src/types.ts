@@ -1,4 +1,4 @@
-§import type { TreeNode } from 'primevue/treenode';
+import type { TreeNode } from 'primevue/treenode';
 import type { Database } from './lib/database.types';
 
 export type Expense = Database['public']['Tables']['expenses']['Row'];
@@ -14,8 +14,7 @@ export interface StrictTreeNode<T> extends TreeNode {
   children?: StrictTreeNode<T>[];
 }
 
-export type UiExpense = Omit<Expense, 'card' |'differentiator'>;
-
+export type UiExpense = Omit<Expense, 'card' | 'differentiator'>;
 
 export type CategorisedExpenses = {
   category: string;

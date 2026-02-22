@@ -2,7 +2,6 @@ import type { ExpensesInput } from '@/composables/useReportInputs';
 import { fetchCategoryExpenses } from '@/lib/expenses';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, type Ref } from 'vue';
-import type { Category } from '@/types';
 import ShortUniqueId from 'short-unique-id';
 
 const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {

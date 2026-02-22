@@ -35,7 +35,7 @@ const onError = (event: FileUploadUploadEvent) => {
         ref="fileupload"
         mode="basic"
         name="file"
-        url="http://127.0.0.1:5000/statements"
+        url="https://expenses-868149906730.europe-west2.run.app/statements"
         accept=".csv,.pdf"
         :maxFileSize="1000000"
         @upload="onUpload"
