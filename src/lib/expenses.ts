@@ -1,6 +1,6 @@
 import { supabase } from './dbClient';
 import type { ExpensesInput } from '@/composables/useReportInputs';
-
+const EXPENSES_COLS = 'month, description, amount, id, date, category, card_member';
 export const fetchExpenses = async (params: ExpensesInput, category: string) => {
   const { data, error } = await supabase
     .from('expenses')
@@ -9,6 +9,7 @@ export const fetchExpenses = async (params: ExpensesInput, category: string) => 
     .in('month', params.months)
     .in('card', params.cards)
     .eq('category', category)
+    .neq('category', 'Exclude')
     .gte('amount', 0)
     .order('amount', { ascending: false });
 
@@ -54,10 +55,20 @@ export const fetchCategorisedExpensesByMonths = async (category: string) => {
 export const fetchExpensesByMonth = async (month: string, category: string) => {
   const { data, error } = await supabase
     .from('expenses')
-    .select('month, description, amount, id, date')
+    .select(EXPENSES_COLS)
     .gt('amount', 0)
     .eq('month', month)
     .eq('category', category)
+    .order('amount', { ascending: false });
+
+  return { data, error };
+};
+
+export const searchExpenses = async (query: string) => {
+  const { data, error } = await supabase
+    .from('expenses')
+    .select(EXPENSES_COLS)
+    .or(`differentiator.ilike.%${query}%,category.ilike.%${query}%`)
     .order('amount', { ascending: false });
 
   return { data, error };

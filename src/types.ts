@@ -21,8 +21,3 @@ export type CategorisedExpenses = {
   total: string;
   expenses: Array<UiExpense>;
 };
-
-export interface X {
-  name: String;
-  gender: String;
-}

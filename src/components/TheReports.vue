@@ -6,7 +6,7 @@ import TheExpenses from './TheExpenses.vue';
 const { inputs } = useReportInputs();
 
 const expandedRows = ref({});
-const { data: cexpenses } = useCategoryExpenses(inputs);
+const { data: cexpenses, refetch } = useCategoryExpenses(inputs);
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const { data: cexpenses } = useCategoryExpenses(inputs);
     <DataTable
       v-model:expandedRows="expandedRows"
       :value="cexpenses"
-      dataKey="id"
+      dataKey="category"
       tableStyle="min-width: 60rem"
     >
       <Column expander style="width: 5rem" />
@@ -23,7 +23,7 @@ const { data: cexpenses } = useCategoryExpenses(inputs);
       <Column field="amount" header="Total" />
       <template #expansion="slotProps">
         <div class="p-4">
-          <TheExpenses :category="slotProps.data.category" />
+          <TheExpenses @category-changed="refetch" :category="slotProps.data.category" />
         </div>
       </template>
     </DataTable>

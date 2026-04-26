@@ -13,16 +13,16 @@
       }"
     >
       <template #item="{ item, props, hasSubmenu }">
-        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+        <router-link v-if="item.route" v-slot="{ href, navigate, isExactActive }" :to="item.route" custom>
+          <a v-ripple :href="href" v-bind="props.action" @click="navigate" :class="{ 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold': isExactActive }">
             <span :class="item.icon" />
-            <span>{{ item.label }}</span>
+            <span class="ml-2">{{ item.label }}</span>
           </a>
         </router-link>
         <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
           <span :class="item.icon" />
-          <span>{{ item.label }}</span>
-          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down" />
+          <span class="ml-2">{{ item.label }}</span>
+          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
         </a>
       </template>
     </Menubar>
@@ -35,18 +35,19 @@ import { ref } from 'vue';
 const { setVisibility } = useDialogStore();
 const items = ref([
   {
-    label: 'Reports',
+    label: 'Expenses',
     icon: 'pi pi-palette',
     route: '/reports',
   },
   {
-    label: 'Dashboard',
-    icon: 'pi pi-link',
+    label: 'Timeline',
+    icon: 'pi pi-calendar',
     route: '/',
   },
   {
-    label: 'External',
-    icon: 'pi pi-home',
+    label: 'Search',
+    icon: 'pi pi-search',
+    route: '/search',
   },
   {
     label: 'Upload Statement',

@@ -50,6 +50,7 @@ const saveExpenseToCategory = async () => {
             optionLabel="category"
             placeholder="Select a category"
             class="w-full md:w-56"
+            size="small"
           />
         </div>
       </div>
