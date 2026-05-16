@@ -38,8 +38,12 @@ export const updateCategoryOnExpenses = async (category: string, expenseIds: str
   const { data, error } = await supabase.from('expenses').update({ category }).in('id', expenseIds);
 };
 
-export const fetchDashboardData = async () => {
-  return await supabase.from('get_dashboard').select('*');
+export const fetchDashboardData = async (params?: ExpensesInput) => {
+  let query = supabase.from('get_dashboard').select('*');
+  if (params?.years?.length) {
+    query = query.in('year', params.years.map(Number));
+  }
+  return await query;
 };
 
 export const fetchCategorisedExpensesByMonths = async (category: string) => {
@@ -72,4 +76,9 @@ export const searchExpenses = async (query: string) => {
     .order('amount', { ascending: false });
 
   return { data, error };
+};
+
+export const fetchYears = async () => {
+  const { data } = await supabase.from('timeline').select('year');
+  return Array.from(new Set(data?.map((d) => d.year))).sort((a, b) => (b || 0) - (a || 0));
 };

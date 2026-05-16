@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/vue-query';
 import { computed, type Ref } from 'vue';
 import ShortUniqueId from 'short-unique-id';
 
-const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
+export const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   const x = nodes.reduce(
     (acc, n) => {
       const [year, month, card] = n.split('-');
