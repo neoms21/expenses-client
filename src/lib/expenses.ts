@@ -38,6 +38,20 @@ export const updateCategoryOnExpenses = async (category: string, expenseIds: str
   const { data, error } = await supabase.from('expenses').update({ category }).in('id', expenseIds);
 };
 
+export const deleteExpenses = async (expenseIds: string[]) => {
+  const { data, error } = await supabase
+    .from('expenses')
+    .delete()
+    .in('id', expenseIds);
+
+  if (error) {
+    console.error('Error deleting expenses:', error);
+  }
+
+  return { data, error };
+};
+
+
 export const fetchDashboardData = async (params?: ExpensesInput) => {
   let query = supabase.from('get_dashboard').select('*');
   if (params?.years?.length) {

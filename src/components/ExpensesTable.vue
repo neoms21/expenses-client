@@ -14,13 +14,23 @@
       Expenses for {{ selectedMonth }} ({{ expenses.length }} - total
       {{ expenses.reduce((acc, e) => acc + (e.amount || 0), 0).toFixed(2) }})
     </Message>
-    <Button
-      size="small"
-      variant="text"
-      :disabled="selectedExpenses?.length === 0"
-      v-on:click="showAssignCategory"
-      >Assign Category</Button
-    >
+    <div class="flex gap-2">
+      <Button
+        size="small"
+        variant="text"
+        :disabled="selectedExpenses?.length === 0"
+        v-on:click="showAssignCategory"
+        >Assign Category</Button
+      >
+      <Button
+        size="small"
+        variant="text"
+        severity="danger"
+        :disabled="selectedExpenses?.length === 0"
+        v-on:click="handleDeleteSelected"
+        >Delete</Button
+      >
+    </div>
 
     <Divider />
     <DataTable v-model:selection="selectedExpenses" striped-rows :value="expenses" dataKey="id">
@@ -68,6 +78,7 @@
 
 <script setup lang="ts">
 import { useCategories, useUpdateCategoryOnExpenses } from '@/hooks/useCategories';
+import { useDeleteExpenses } from '@/hooks/useExpenses';
 import type { UiExpense } from '@/types';
 import { useDialog } from 'primevue/usedialog';
 import { ref } from 'vue';
@@ -89,6 +100,7 @@ const selectedExpenses = ref<Array<UiExpense>>([]);
 const { data: result } = useCategories();
 
 const { mutate: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
+const { mutateAsync: deleteExpensesMutate } = useDeleteExpenses();
 
 const dialog = useDialog();
 
@@ -114,6 +126,20 @@ const showAssignCategory = () => {
       },
     },
   });
+};
+
+const handleDeleteSelected = async () => {
+  if (selectedExpenses.value.length === 0) return;
+  const confirmed = confirm(`Are you sure you want to delete the selected ${selectedExpenses.value.length} expense(s)?`);
+  if (!confirmed) return;
+
+  try {
+    await deleteExpensesMutate(selectedExpenses.value.map((e) => e.id));
+    selectedExpenses.value = [];
+    await refetchFn();
+  } catch (err) {
+    console.error('Error deleting expenses:', err);
+  }
 };
 
 const saveCategoryOnExpenses = async (expenseIds: Array<string>, category: string) => {

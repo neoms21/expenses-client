@@ -1,7 +1,7 @@
 import type { ExpensesInput } from '@/composables/useReportInputs';
-import { fetchExpenses } from '@/lib/expenses';
+import { fetchExpenses, deleteExpenses } from '@/lib/expenses';
 
-import { useQuery } from '@tanstack/vue-query';
+import { useQuery, useMutation } from '@tanstack/vue-query';
 import { computed, type Ref, type ref } from 'vue';
 import type { Category } from '@/types';
 
@@ -35,3 +35,10 @@ export const useExpensesByCategory = (selectedInputs: Ref<string[]>, category: R
 
   return { data, refetch };
 };
+
+export function useDeleteExpenses() {
+  return useMutation({
+    mutationFn: (expenseIds: string[]) => deleteExpenses(expenseIds),
+  });
+}
+
