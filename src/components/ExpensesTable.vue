@@ -33,7 +33,17 @@
     </div>
 
     <Divider />
-    <DataTable v-model:selection="selectedExpenses" striped-rows :value="expenses" dataKey="id">
+    <DataTable
+      v-model:selection="selectedExpenses"
+      striped-rows
+      :value="expenses"
+      dataKey="id"
+      paginator
+      :rows="10"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+    >
       <Column
         :pt="{
           bodyCell: (data) => ({ 'data-testid': data.parent.props.rowData.id }),
@@ -43,13 +53,7 @@
       ></Column>
       <Column field="description" header="Description" header-style="width: 30%">
         <template #body="{ data }">
-          <div v-tooltip.top="`${data.description} - ${data.id} - ${data.card_member}`">
-            {{
-              data.description?.length > 12
-                ? `${data.description.substring(0, 12)}...`
-                : data.description
-            }}
-          </div>
+          <span class="text-xs">{{ data.description }}</span>
         </template>
       </Column>
       <Column field="amount" header="Amount" />
@@ -94,7 +98,6 @@ export type ExpensesTableProps = {
 };
 
 const { expenses = [], refetchFn, selectedMonth } = defineProps<ExpensesTableProps>();
-console.log('🚀 ~ expenses:', expenses);
 
 const selectedExpenses = ref<Array<UiExpense>>([]);
 const { data: result } = useCategories();
@@ -130,7 +133,9 @@ const showAssignCategory = () => {
 
 const handleDeleteSelected = async () => {
   if (selectedExpenses.value.length === 0) return;
-  const confirmed = confirm(`Are you sure you want to delete the selected ${selectedExpenses.value.length} expense(s)?`);
+  const confirmed = confirm(
+    `Are you sure you want to delete the selected ${selectedExpenses.value.length} expense(s)?`,
+  );
   if (!confirmed) return;
 
   try {
@@ -152,7 +157,6 @@ const saveCategoryOnExpenses = async (expenseIds: Array<string>, category: strin
 };
 
 const handleCategoryChange = async (expenseId: string, event: SelectChangeEvent) => {
-  console.log('🚀 ~ handleCategoryChange ~ expenseId:', expenseId);
   return saveCategoryOnExpenses([expenseId], event.value.category);
 };
 </script>

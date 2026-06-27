@@ -39,10 +39,7 @@ export const updateCategoryOnExpenses = async (category: string, expenseIds: str
 };
 
 export const deleteExpenses = async (expenseIds: string[]) => {
-  const { data, error } = await supabase
-    .from('expenses')
-    .delete()
-    .in('id', expenseIds);
+  const { data, error } = await supabase.from('expenses').delete().in('id', expenseIds);
 
   if (error) {
     console.error('Error deleting expenses:', error);
@@ -50,7 +47,6 @@ export const deleteExpenses = async (expenseIds: string[]) => {
 
   return { data, error };
 };
-
 
 export const fetchDashboardData = async (params?: ExpensesInput) => {
   let query = supabase.from('get_dashboard').select('*');
@@ -86,7 +82,7 @@ export const searchExpenses = async (query: string) => {
   const { data, error } = await supabase
     .from('expenses')
     .select(EXPENSES_COLS)
-    .or(`differentiator.ilike.%${query}%,category.ilike.%${query}%`)
+    .or(`description.ilike.%${query}%,differentiator.ilike.%${query}%,category.ilike.%${query}%`)
     .order('amount', { ascending: false });
 
   return { data, error };
