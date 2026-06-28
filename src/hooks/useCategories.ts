@@ -1,7 +1,7 @@
 // src/hooks/useArticles.js
 import { fetchCategories, insertCategory, updateCategory } from '@/lib/categories';
 import { updateCategoryOnExpenses } from '@/lib/expenses';
-import type { Category, CategoryWithoutId } from '@/types';
+import type { Category, CategoryWithoutId } from '@/types/index';
 import { useQuery } from '@tanstack/vue-query';
 import { useMutation } from '@tanstack/vue-query';
 

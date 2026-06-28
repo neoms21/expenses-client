@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Category } from '@/types';
+import type { Category } from '@/types/index';
 import { useCategories } from '@/hooks/useCategories';
 import { useToast } from 'primevue';
 import { ref } from 'vue';

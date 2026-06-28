@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/vue';
 import ExpensesTable, { type ExpensesTableProps } from '../ExpensesTable.vue';
 import { ref } from 'vue';
 import PrimeVue from 'primevue/config';
-import type { UiExpense } from '@/types';
+import type { UiExpense } from '@/types/index';
 
 describe('ExpensesTable.vue', () => {
   const mockExpenses: UiExpense[] = [

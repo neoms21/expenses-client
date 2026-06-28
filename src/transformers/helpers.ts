@@ -1,4 +1,4 @@
-import type { Category } from '@/types';
+import type { Category } from '@/types/index';
 
 const existsInList = (val: string, arr: string[]) => {
   // console.log('🚀 ~ existsInList ~ val:', val, arr);

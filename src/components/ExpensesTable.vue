@@ -61,18 +61,12 @@
       <Column field="date" header="Date" />
       <Column header="Assign Category">
         <template #body="slotProps">
-          <Select
-            optionLabel="category"
+          <Button
+            label="Assign"
+            icon="pi pi-tag"
             size="small"
-            :options="result?.data || []"
-            v-on:change="
-              async (event) => {
-                await handleCategoryChange(slotProps.data.id, event);
-                await refetchFn();
-              }
-            "
-            placeholder="Select a category"
-            class="w-full md:w-56"
+            variant="text"
+            v-on:click="showAssignCategoryForRow(slotProps.data)"
           />
         </template>
       </Column>
@@ -83,12 +77,11 @@
 <script setup lang="ts">
 import { useCategories, useUpdateCategoryOnExpenses } from '@/hooks/useCategories';
 import { useDeleteExpenses } from '@/hooks/useExpenses';
-import type { UiExpense } from '@/types';
+import type { UiExpense } from '@/types/index';
 import { useDialog } from 'primevue/usedialog';
 import { ref } from 'vue';
 
-import AssignCategory from '@/components/AssignCategory.vue';
-import type { SelectChangeEvent } from 'primevue';
+import TheCategories from '@/components/TheCategories.vue';
 
 export type ExpensesTableProps = {
   expenses: Array<Partial<UiExpense>>;
@@ -102,15 +95,17 @@ const { expenses = [], refetchFn, selectedMonth } = defineProps<ExpensesTablePro
 const selectedExpenses = ref<Array<UiExpense>>([]);
 const { data: result } = useCategories();
 
-const { mutate: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
+const { mutateAsync: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
 const { mutateAsync: deleteExpensesMutate } = useDeleteExpenses();
 
 const dialog = useDialog();
 
 const showAssignCategory = () => {
-  dialog.open(AssignCategory, {
+  if (selectedExpenses.value.length === 0) return;
+
+  dialog.open(TheCategories, {
     props: {
-      header: 'Assign Category',
+      header: 'Assign Category Rules',
       style: {
         width: '50vw',
       },
@@ -120,12 +115,43 @@ const showAssignCategory = () => {
       },
       modal: true,
     },
+    data: {
+      expense: selectedExpenses.value[0],
+      expenseIds: selectedExpenses.value.map((e) => e.id),
+    },
     emits: {
-      onCategoryAssignment: async (category: string) => {
-        saveCategoryOnExpenses(
-          selectedExpenses.value.map((e) => e.id),
-          category,
-        );
+      onSuccessfulSave: async (data: any) => {
+        const expenseIds = selectedExpenses.value.map((e) => e.id);
+        console.log('🚀 ~ showAssignCategory ~ expenseIds:', expenseIds);
+        if (expenseIds.length > 0) {
+          await updateCategoryOnExpenses({ category: data.category, expenseIds });
+        }
+        await refetchFn();
+        selectedExpenses.value = [];
+      },
+    },
+  });
+};
+
+const showAssignCategoryForRow = (rowExpense: UiExpense) => {
+  dialog.open(TheCategories, {
+    props: {
+      header: 'Assign Category Rules',
+      style: {
+        width: '50vw',
+      },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      modal: true,
+    },
+    data: {
+      expense: rowExpense,
+    },
+    emits: {
+      onSuccessfulSave: async () => {
+        await refetchFn();
       },
     },
   });
@@ -145,18 +171,5 @@ const handleDeleteSelected = async () => {
   } catch (err) {
     console.error('Error deleting expenses:', err);
   }
-};
-
-const saveCategoryOnExpenses = async (expenseIds: Array<string>, category: string) => {
-  await updateCategoryOnExpenses({ category, expenseIds });
-
-  setTimeout(async () => {
-    await refetchFn();
-    // visible.value = false;
-  }, 500);
-};
-
-const handleCategoryChange = async (expenseId: string, event: SelectChangeEvent) => {
-  return saveCategoryOnExpenses([expenseId], event.value.category);
 };
 </script>

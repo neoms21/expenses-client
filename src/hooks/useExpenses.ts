@@ -3,7 +3,7 @@ import { fetchExpenses, deleteExpenses } from '@/lib/expenses';
 
 import { useQuery, useMutation } from '@tanstack/vue-query';
 import { computed, type Ref, type ref } from 'vue';
-import type { Category } from '@/types';
+import type { Category } from '@/types/index';
 
 const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   const x = nodes.reduce(
@@ -41,4 +41,3 @@ export function useDeleteExpenses() {
     mutationFn: (expenseIds: string[]) => deleteExpenses(expenseIds),
   });
 }
-

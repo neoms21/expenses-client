@@ -1,18 +1,18 @@
-import type { Category, CategoryWithoutId } from '@/types';
+import type { Category, CategoryWithoutId } from '@/types/index';
 import { supabase } from './dbClient';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 export const fetchCategories = async (): Promise<{
-  data: Array<{ category: string | null }>;
+  data: Array<Category>;
   error: PostgrestError | null;
 }> => {
-  const { data, error } = await supabase.from('categories_from_expenses').select('*');
+  const { data, error } = await supabase.from('categories').select('id, category, items');
 
   if (error) {
     console.error('Error fetching categories:', error);
   }
 
-  return { data: data || [], error };
+  return { data: (data as Category[]) || [], error };
 };
 
 export const insertCategory = async (category: CategoryWithoutId): Promise<boolean> => {
@@ -32,16 +32,16 @@ export const updateCategory = async (category: Category, newItems: string[]): Pr
     .update({ items: uppdatedItems })
     .eq('id', category.id);
 
-  await Promise.all(
-    newItems.map(async (newItem) => {
-      const { data, error } = await supabase
-        .from('expenses')
-        .update({ category: category.category })
-        .ilike('description', '%' + newItem + '%');
+  // await Promise.all(
+  //   newItems.map(async (newItem) => {
+  //     const { data, error } = await supabase
+  //       .from('expenses')
+  //       .update({ category: category.category })
+  //       .ilike('description', '%' + newItem + '%');
 
-      console.log('🚀 ~ updateCategory ~ data:', data, error);
-    }),
-  );
+  //     console.log('🚀 ~ updateCategory ~ data:', data, error);
+  //   }),
+  // );
   if (error) {
     console.error('Error updating Category:', error, category);
   }

@@ -78,12 +78,17 @@ export const fetchExpensesByMonth = async (month: string, category: string) => {
   return { data, error };
 };
 
-export const searchExpenses = async (query: string) => {
-  const { data, error } = await supabase
+export const searchExpenses = async (query: string, includeExcluded: boolean = false) => {
+  let queryBuilder = supabase
     .from('expenses')
     .select(EXPENSES_COLS)
-    .or(`description.ilike.%${query}%,differentiator.ilike.%${query}%,category.ilike.%${query}%`)
-    .order('amount', { ascending: false });
+    .or(`description.ilike.%${query}%,differentiator.ilike.%${query}%,category.ilike.%${query}%`);
+
+  if (!includeExcluded) {
+    queryBuilder = queryBuilder.neq('category', 'Exclude');
+  }
+
+  const { data, error } = await queryBuilder.order('amount', { ascending: false });
 
   return { data, error };
 };

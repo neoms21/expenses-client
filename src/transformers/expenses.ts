@@ -1,8 +1,8 @@
-import type { CategorisedExpenses, Category, Expense, UiExpense, StrictTreeNode } from '@/types';
 import Decimal from 'decimal.js';
 import { groupBy } from 'lodash';
 import ShortUniqueId from 'short-unique-id';
 import { assignCategory } from './helpers';
+import type { Expense, Category, CategorisedExpenses } from '@/types/index';
 
 export const categoriseExpenses = (
   expenses: Array<Omit<Expense, 'category' | 'differentiator' | 'tags'>>,

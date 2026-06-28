@@ -1,5 +1,5 @@
 import { fetchTimelines } from '@/lib';
-import type { Timeline } from '@/types';
+import type { Timeline } from '@/types/index';
 
 import { groupBy, orderBy } from 'lodash';
 import { parse } from 'date-fns/parse';
