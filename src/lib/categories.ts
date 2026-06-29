@@ -26,7 +26,7 @@ export const insertCategory = async (category: CategoryWithoutId): Promise<boole
 };
 
 export const updateCategory = async (category: Category, newItems: string[]): Promise<boolean> => {
-  const uppdatedItems = [...category.items, ...newItems];
+  const uppdatedItems = Array.from(new Set([...(category.items || []), ...newItems]));
   const { data, error } = await supabase
     .from('categories')
     .update({ items: uppdatedItems })

@@ -143,7 +143,7 @@ const isSaveDisabled = () => {
   <Toast />
   <div class="card flex flex-col flex-wrap justify-content-center gap-5">
     <div class="">
-      <div v-if="selectedExpenseIds.length === 1" class="flex flex-col gap-2">
+      <div v-if="selectedExpenseIds.length === 0" class="flex flex-col gap-2">
         <div class="flex gap-3">
           <h4 class="font-bold">Description:</h4>
           <span>{{ expense?.description }} - {{ expense?.amount }} </span>
@@ -183,7 +183,7 @@ const isSaveDisabled = () => {
           />
           <label :for="category.category" class="font-bold">{{ category.category }}</label>
 
-          <div v-if="selectedExpenseIds.length === 1" class="text-xs">
+          <div v-if="selectedExpenseIds.length === 0" class="text-xs">
             {{ category.items?.join(', ') }}
           </div>
         </div>
