@@ -12,6 +12,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Accordion: typeof import('primevue/accordion')['default']
+    AccordionContent: typeof import('primevue/accordioncontent')['default']
+    AccordionHeader: typeof import('primevue/accordionheader')['default']
+    AccordionPanel: typeof import('primevue/accordionpanel')['default']
     AssignCategory: typeof import('./src/components/AssignCategory.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
@@ -63,6 +67,10 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
+  const Accordion: typeof import('primevue/accordion')['default']
+  const AccordionContent: typeof import('primevue/accordioncontent')['default']
+  const AccordionHeader: typeof import('primevue/accordionheader')['default']
+  const AccordionPanel: typeof import('primevue/accordionpanel')['default']
   const AssignCategory: typeof import('./src/components/AssignCategory.vue')['default']
   const Avatar: typeof import('primevue/avatar')['default']
   const Button: typeof import('primevue/button')['default']
