@@ -62,16 +62,17 @@ const saveExpenseToCategory = async () => {
 
   try {
     if (selectedExpenseIds.value.length > 1) {
+      categoryName = newCategory.value || selectedCategory.value?.category || 'Uncategorized';
       await updateCategoryOnExpenses({
-        category: newCategory.value || selectedCategory.value?.category || 'Uncategorized',
+        category: categoryName,
         expenseIds: selectedExpenseIds.value,
       });
-      // emit('onSuccessfulSave', {
-      //   category: categoryName,
-      //   items: categoryTags,
-      // });
+      emit('onSuccessfulSave', {
+        category: categoryName,
+        items: categoryTags,
+      });
       if (dialogRef?.value?.close) {
-        dialogRef.value.close();
+        dialogRef.value.close(true);
       }
       return;
     }
@@ -118,7 +119,7 @@ const saveExpenseToCategory = async () => {
     });
 
     if (dialogRef?.value?.close) {
-      dialogRef.value.close();
+      dialogRef.value.close(true);
     }
   } catch (error: any) {
     console.error('Error saving category rules:', error);

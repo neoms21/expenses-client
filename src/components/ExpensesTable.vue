@@ -52,16 +52,19 @@
     <Accordion v-if="selectedGroupField" multiple @update:value="onAccordionChange">
       <AccordionPanel v-for="group in groupedExpenses" :key="group.key" :value="group.key">
         <AccordionHeader>
-          <div class="flex items-center gap-3 w-full justify-between pr-4">
-            <span class="font-semibold text-sm text-blue-500 dark:text-orange-600">
-              {{ groupOptions.find((o) => o.value === selectedGroupField)?.label }}: {{ group.key }}
-            </span>
-            <div class="flex items-center gap-3 text-xs">
+          <div class="flex items-center gap-3 w-full justify-start pr-4">
+            <div class="flex flex-1 items-center gap-2">
               <span
                 class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-2.5 py-0.5 rounded-full font-medium"
               >
-                {{ group.count }} items
+                {{ group.count }}
               </span>
+              <span class="font-semibold text-sm text-blue-500 dark:text-orange-600">
+                {{ groupOptions.find((o) => o.value === selectedGroupField)?.label }}:
+                {{ group.key }}
+              </span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
               <span class="text-red-500 dark:text-red-400 font-medium">
                 Total: £{{ group.totalAmount.toFixed(2) }}
               </span>
@@ -161,7 +164,6 @@
 </template>
 
 <script setup lang="ts">
-import { useCategories, useUpdateCategoryOnExpenses } from '@/hooks/useCategories';
 import { useDeleteExpenses } from '@/hooks/useExpenses';
 import type { UiExpense } from '@/types/index';
 import { useDialog } from 'primevue/usedialog';
@@ -189,9 +191,13 @@ watch(selectedGroupField, () => {
 });
 
 // Tracks which panels have been opened so inner DataTables are only mounted on demand
-const onAccordionChange = (openValues: string[]) => {
-  // Add any newly opened panels to the set (never remove — lazy mount strategy)
-  openValues.forEach((v) => expandedPanels.value.add(v));
+const onAccordionChange = (value: string | string[] | null | undefined) => {
+  if (!value) return;
+  if (Array.isArray(value)) {
+    value.forEach((v) => expandedPanels.value.add(v));
+  } else {
+    expandedPanels.value.add(value);
+  }
 };
 
 const groupOptions = [
@@ -248,7 +254,6 @@ const updateSelectedExpensesForGroup = (
   const otherSelected = selectedExpenses.value.filter((e) => !groupIds.has(e.id));
   selectedExpenses.value = [...otherSelected, ...newSelectionForGroup];
 };
-const { mutateAsync: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
 const { mutateAsync: deleteExpensesMutate } = useDeleteExpenses();
 
 const dialog = useDialog();
@@ -272,16 +277,11 @@ const showAssignCategory = () => {
       expense: selectedExpenses.value[0],
       expenseIds: selectedExpenses.value.map((e) => e.id),
     },
-    emits: {
-      onSuccessfulSave: async () => {
-        // const expenseIds = selectedExpenses.value.map((e) => e.id);
-        // console.log('🚀 ~ showAssignCategory ~ expenseIds:', expenseIds);
-        // if (expenseIds.length > 0) {
-        //   await updateCategoryOnExpenses({ category: data.category, expenseIds });
-        // }
-        await refetchFn();
-        // selectedExpenses.value = [];
-      },
+    onClose: (options) => {
+      if (options && options.data) {
+        refetchFn();
+        selectedExpenses.value = [];
+      }
     },
   });
 };
@@ -302,10 +302,10 @@ const showAssignCategoryForRow = (rowExpense: UiExpense) => {
     data: {
       expense: rowExpense,
     },
-    emits: {
-      onSuccessfulSave: async () => {
-        await refetchFn();
-      },
+    onClose: (options) => {
+      if (options && options.data) {
+        refetchFn();
+      }
     },
   });
 };

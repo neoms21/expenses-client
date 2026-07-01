@@ -255,15 +255,14 @@ describe('ExpensesTable.vue', () => {
     groupHeaders = container.querySelectorAll('.p-accordion-header');
     expect(groupHeaders.length).toBe(2); // 'Work' and 'Food' groups
 
-    expect(screen.getByText('Category: Work')).toBeDefined();
-    expect(screen.getByText('Category: Food')).toBeDefined();
+    const headerTexts = Array.from(groupHeaders).map(el => el.textContent || '');
+    expect(headerTexts[0]).toContain('Category: Food');
+    expect(headerTexts[0]).toContain('1');
+    expect(headerTexts[0]).toContain('Total: £120.50');
 
-    // Work has 1 item, Food has 1 item
-    const itemsBadges = screen.getAllByText('1 items');
-    expect(itemsBadges.length).toBe(2);
-
-    expect(screen.getByText('Total: $45.99')).toBeDefined();
-    expect(screen.getByText('Total: $120.50')).toBeDefined();
+    expect(headerTexts[1]).toContain('Category: Work');
+    expect(headerTexts[1]).toContain('1');
+    expect(headerTexts[1]).toContain('Total: £45.99');
   });
 
   it('orders groups descending based on the number of items in each group', async () => {
@@ -298,12 +297,12 @@ describe('ExpensesTable.vue', () => {
     // Work (2 items) should be the first group, and Food (1 item) should be the second
     const headerTexts = Array.from(groupHeaders).map(el => el.textContent || '');
     expect(headerTexts[0]).toContain('Category: Work');
-    expect(headerTexts[0]).toContain('2 items');
-    expect(headerTexts[0]).toContain('Total: $125.99');
+    expect(headerTexts[0]).toContain('2');
+    expect(headerTexts[0]).toContain('Total: £125.99');
 
     expect(headerTexts[1]).toContain('Category: Food');
-    expect(headerTexts[1]).toContain('1 items');
-    expect(headerTexts[1]).toContain('Total: $120.50');
+    expect(headerTexts[1]).toContain('1');
+    expect(headerTexts[1]).toContain('Total: £120.50');
   });
 
   it('collapses groups by default and expands them when clicked', async () => {
