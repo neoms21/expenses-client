@@ -116,7 +116,7 @@ const renderTheCategories = (expense: Partial<UiExpense>) => {
         dialogRef: ref({
           data: {
             expense,
-            expenseIds: expense.id ? [expense.id] : [],
+            expenseIds: [],
           },
           close: mockClose,
         }),

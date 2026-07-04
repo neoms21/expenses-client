@@ -174,7 +174,11 @@ const isSaveDisabled = () => {
       <hr class="my-2" />
       <div v-if="result?.data" class="flex flex-col gap-2">
         <h3 class="font-bold">Select from existing categories</h3>
-        <div v-for="category in result?.data" :key="category.category" class="flex gap-2">
+        <div
+          v-for="category in result?.data"
+          :key="category.category"
+          class="flex gap-2 items-center"
+        >
           <RadioButton
             v-model="selectedCategory"
             :inputId="category.category"

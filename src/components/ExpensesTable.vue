@@ -82,84 +82,28 @@
 
         <AccordionContent>
           <!-- Lazy render: only mount DataTable once a panel has been opened -->
-          <DataTable
+          <ExpensesBaseTable
             v-if="expandedPanels.has(group.key)"
+            :value="group.items"
             :selection="getSelectedExpensesForGroup(group.items)"
             @update:selection="updateSelectedExpensesForGroup(group.items, $event)"
-            striped-rows
-            :value="group.items"
-            dataKey="id"
-          >
-            <Column
-              :pt="{
-                bodyCell: (data) => ({ 'data-testid': data.parent.props.rowData.id }),
-              }"
-              selectionMode="multiple"
-              headerStyle="width: 1rem"
-            ></Column>
-            <Column field="description" header="Description" header-style="width: 30%">
-              <template #body="{ data }">
-                <span class="text-xs">{{ data.description }}</span>
-              </template>
-            </Column>
-            <Column field="amount" header="Amount" />
-            <Column field="category" header="Category" />
-            <Column field="date" header="Date" />
-            <Column header="Assign Category">
-              <template #body="slotProps">
-                <Button
-                  label="Assign"
-                  icon="pi pi-tag"
-                  size="small"
-                  variant="text"
-                  v-on:click="showAssignCategoryForRow(slotProps.data)"
-                />
-              </template>
-            </Column>
-          </DataTable>
+            @assign-category="showAssignCategoryForRow"
+          />
         </AccordionContent>
       </AccordionPanel>
     </Accordion>
 
-    <DataTable
+    <ExpensesBaseTable
       v-else
-      v-model:selection="selectedExpenses"
-      striped-rows
       :value="expenses"
-      dataKey="id"
+      v-model:selection="selectedExpenses"
+      @assign-category="showAssignCategoryForRow"
       paginator
       :rows="10"
       :rowsPerPageOptions="[5, 10, 20, 50]"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-    >
-      <Column
-        :pt="{
-          bodyCell: (data) => ({ 'data-testid': data.parent.props.rowData.id }),
-        }"
-        selectionMode="multiple"
-        headerStyle="width: 1rem"
-      ></Column>
-      <Column field="description" header="Description" header-style="width: 30%">
-        <template #body="{ data }">
-          <span class="text-xs">{{ data.description }}</span>
-        </template>
-      </Column>
-      <Column field="amount" header="Amount" />
-      <Column field="category" header="Category" />
-      <Column field="date" header="Date" />
-      <Column header="Assign Category">
-        <template #body="slotProps">
-          <Button
-            label="Assign"
-            icon="pi pi-tag"
-            size="small"
-            variant="text"
-            v-on:click="showAssignCategoryForRow(slotProps.data)"
-          />
-        </template>
-      </Column>
-    </DataTable>
+    />
   </div>
 </template>
 
@@ -170,6 +114,7 @@ import { useDialog } from 'primevue/usedialog';
 import { ref, computed, watch } from 'vue';
 
 import TheCategories from '@/components/TheCategories.vue';
+import ExpensesBaseTable from '@/components/ExpensesBaseTable.vue';
 
 export type ExpensesTableProps = {
   expenses: Array<Partial<UiExpense>>;
