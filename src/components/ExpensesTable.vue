@@ -208,13 +208,14 @@ const showAssignCategory = () => {
 
   dialog.open(TheCategories, {
     props: {
-      header: 'Assign Category Rules',
+      showHeader: false,
       style: {
-        width: '50vw',
+        width: '75vw',
       },
       breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
+        '1200px': '85vw',
+        '768px': '90vw',
+        '576px': '95vw',
       },
       modal: true,
     },
@@ -234,13 +235,14 @@ const showAssignCategory = () => {
 const showAssignCategoryForRow = (rowExpense: UiExpense) => {
   dialog.open(TheCategories, {
     props: {
-      header: 'Assign Category Rules',
+      showHeader: false,
       style: {
-        width: '50vw',
+        width: '75vw',
       },
       breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
+        '1200px': '85vw',
+        '768px': '90vw',
+        '576px': '95vw',
       },
       modal: true,
     },

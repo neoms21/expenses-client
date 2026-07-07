@@ -140,8 +140,7 @@ describe('TheCategories.vue', () => {
       category: 'Uncategorized',
     });
 
-    expect(await screen.findByText(/Lidl food groceries/i)).toBeDefined();
-    expect(await screen.findByText(/45.99/i)).toBeDefined();
+    expect(await screen.findByText(/Lidl food groceries - 45.99/i)).toBeDefined();
 
     const checkboxes = await screen.findAllByTestId('tag-checkbox');
     expect(checkboxes).toHaveLength(3);
@@ -159,10 +158,13 @@ describe('TheCategories.vue', () => {
     await fireEvent.click(checkboxes[0]!); // Lidl
     await fireEvent.click(checkboxes[2]!); // groceries
 
+    const createBtn = screen.getByText('Create New Category');
+    await fireEvent.click(createBtn);
+
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
     const newManualTagInput = inputs[0]!;
     await fireEvent.update(newManualTagInput, ''); // Clear pre-populated manual tag
-    const newCategoryInput = inputs[1]!;
+    const newCategoryInput = inputs[2]!;
     await fireEvent.update(newCategoryInput, 'Supermarkets');
 
     const saveBtn = screen.getByRole('button', { name: 'Save' });
@@ -219,10 +221,13 @@ describe('TheCategories.vue', () => {
     await fireEvent.click(checkboxes[0]!); // Lidl
     await fireEvent.click(checkboxes[2]!); // groceries
 
+    const createBtn = screen.getByText('Create New Category');
+    await fireEvent.click(createBtn);
+
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
     const newManualTagInput = inputs[0]!;
     await fireEvent.update(newManualTagInput, ''); // Clear pre-populated manual tag
-    const newCategoryInput = inputs[1]!;
+    const newCategoryInput = inputs[2]!;
     await fireEvent.update(newCategoryInput, 'Supermarkets');
 
     const saveBtn = screen.getByRole('button', { name: 'Save' });
@@ -281,8 +286,11 @@ describe('TheCategories.vue', () => {
     await fireEvent.click(radios[0]!); // Groceries category
     expect(radios[0]!.checked).toBe(true);
 
+    const createBtn = screen.getByText('Create New Category');
+    await fireEvent.click(createBtn);
+
     const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-    const newCategoryInput = inputs[1]!;
+    const newCategoryInput = inputs[2]!;
     await fireEvent.update(newCategoryInput, 'Supermarkets');
 
     expect(radios[0]!.checked).toBe(false);

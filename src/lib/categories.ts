@@ -6,7 +6,10 @@ export const fetchCategories = async (): Promise<{
   data: Array<Category>;
   error: PostgrestError | null;
 }> => {
-  const { data, error } = await supabase.from('categories').select('id, category, items');
+  const { data, error } = await supabase
+    .from('categories')
+    .select('id, category, items')
+    .order('category', 'asc');
 
   if (error) {
     console.error('Error fetching categories:', error);
