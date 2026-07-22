@@ -1,7 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../types/database';
+import PocketBase from 'pocketbase';
 
-export const supabase = createClient<Database>(
-  import.meta.env.VITE_SUPABASE_URL || '',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+export const pb = new PocketBase(
+  import.meta.env.VITE_POCKETBASE_URL || 'http://127.0.0.1:8090'
 );

@@ -2,10 +2,10 @@ import { it, expect, describe, test } from 'vitest';
 import { assignCategory } from '../helpers';
 
 const categories = [
-  { id: 10, category: 'Squash', items: ['Sando', 'meadHurST'] },
-  { id: 10, category: 'Shrey', items: ['Vanshika'] },
-  { id: 10, category: 'Online', items: ['Paypal', 'Amazon', 'amzn'] },
-  { id: 10, category: 'Holidays', items: ['ssxs', 'xx', 'yy'] },
+  { id: '10', category: 'Squash', items: ['Sando', 'meadHurST'] },
+  { id: '10', category: 'Shrey', items: ['Vanshika'] },
+  { id: '10', category: 'Online', items: ['Paypal', 'Amazon', 'amzn'] },
+  { id: '10', category: 'Holidays', items: ['ssxs', 'xx', 'yy'] },
 ];
 
 describe('helpers  tests', () => {

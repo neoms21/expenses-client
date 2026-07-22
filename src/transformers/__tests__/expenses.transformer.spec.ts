@@ -14,7 +14,6 @@ describe('Expenses transformer', () => {
           month: 'Mar',
           year: 2025,
           card: 'a',
-          tags: [],
         },
         {
           id: 'a2',
@@ -25,10 +24,9 @@ describe('Expenses transformer', () => {
           month: 'Mar',
           year: 2025,
           card: 'a',
-          tags: [],
         },
       ],
-      [{ id: 1, category: 'AA', items: ['D1', 'D2'] }],
+      [{ id: '1', category: 'AA', items: ['D1', 'D2'] }],
     );
 
     expect(result).toEqual([
@@ -47,7 +45,6 @@ describe('Expenses transformer', () => {
             month: 'Mar',
             year: 2025,
             card: 'a',
-            tags: [],
           },
           {
             id: 'a2',
@@ -59,7 +56,6 @@ describe('Expenses transformer', () => {
             month: 'Mar',
             year: 2025,
             card: 'a',
-            tags: [],
           },
         ],
       },

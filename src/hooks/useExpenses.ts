@@ -10,9 +10,9 @@ const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
     (acc, n) => {
       const [year, month, card] = n.split('-');
 
-      acc.years.add(year);
-      acc.months.add(month);
-      acc.cards.add(card);
+      acc.years.add(year || '');
+      acc.months.add(month || '');
+      acc.cards.add(card || '');
       return acc;
     },
     { years: new Set<string>(), months: new Set<string>(), cards: new Set<string>() },

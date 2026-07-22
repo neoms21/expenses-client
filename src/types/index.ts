@@ -1,16 +1,35 @@
 import type { TreeNode } from 'primevue/treenode';
-import type { Database } from './database';
 
-export type Expense = Database['public']['Tables']['expenses']['Row'];
-
-export type Timeline = Database['public']['Views']['timeline']['Row'];
-
-export type Category = Pick<
-  Database['public']['Tables']['categories']['Row'],
-  'category' | 'items' | 'id'
->;
+export interface Category {
+  id: string;
+  category: string;
+  items: string[];
+}
 
 export type CategoryWithoutId = Omit<Category, 'id'>;
+
+export interface Expense {
+  id: string;
+  amount: number;
+  card: string;
+  card_member: string;
+  category: string;
+  date: string;
+  description: string;
+  differentiator: string;
+  month: string;
+  year: number;
+  tags?: string[] | null;
+}
+
+export interface Timeline {
+  id: string;
+  year: number;
+  month: string;
+  card: string;
+  total: number;
+}
+
 export interface StrictTreeNode<T> extends TreeNode {
   data: T;
   children?: StrictTreeNode<T>[];

@@ -86,7 +86,7 @@ const currentUserId = ref(1);
 const { data, isLoading, isError, error, refetch } = useUserData(currentUserId);
 
 // Function to update the user ID
-const selectUser = (id) => {
+const selectUser = (id: any) => {
   currentUserId.value = id;
 };
 

@@ -17,13 +17,14 @@ export const categoriseExpenses = (
 
   const groupedByCategory = groupBy(assignedCategoryExpenses, 'category');
   const result = Object.keys(groupedByCategory).map((category) => {
+    const list = groupedByCategory[category] || [];
     return {
       category: category,
       id: new ShortUniqueId().rnd(),
       total: new Decimal(
-        groupedByCategory[category].reduce((acc, expense) => acc + expense.amount, 0),
+        list.reduce((acc, expense) => acc + expense.amount, 0),
       ).toFixed(2),
-      expenses: groupedByCategory[category].sort((a, b) => Number(b.amount) - Number(a.amount)),
+      expenses: list.sort((a, b) => Number(b.amount) - Number(a.amount)),
     };
   });
   return result.sort((a, b) => Number(b.total) - Number(a.total));
