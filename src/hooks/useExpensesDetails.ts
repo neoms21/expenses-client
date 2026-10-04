@@ -1,4 +1,4 @@
-import { fetchDashboardData, fetchCategorisedExpensesByMonths } from '@/lib/expenses';
+import { fetchCategorisedExpensesByMonths } from '@/lib/expenses';
 import { useQuery } from '@tanstack/vue-query';
 import type { Ref } from 'vue';
 

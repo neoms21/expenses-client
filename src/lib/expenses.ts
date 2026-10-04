@@ -1,99 +1,203 @@
-import { supabase } from './dbClient';
+import { pb } from './dbClient';
 import type { ExpensesInput } from '@/composables/useReportInputs';
-const EXPENSES_COLS = 'month, description, amount, id, date, category, card_member';
+import type { Expense } from '@/types/index';
+
+const EXPENSES_COLS = 'month,description,amount,id,date,category,card_member';
+
 export const fetchExpenses = async (params: ExpensesInput, category: string) => {
-  const { data, error } = await supabase
-    .from('expenses')
-    .select('id, amount, date, card_member, description, month, year, card')
-    .in('year', params.years.map(Number))
-    .in('month', params.months)
-    .in('card', params.cards)
-    .eq('category', category)
-    .neq('category', 'Exclude')
-    .gte('amount', 0)
-    .order('amount', { ascending: false });
+  try {
+    const filterParts: string[] = [];
 
-  if (error) {
+    if (params.years && params.years.length > 0) {
+      const yearFilters = params.years.map((y) => `year = ${Number(y)}`).join(' || ');
+      filterParts.push(`(${yearFilters})`);
+    }
+    if (params.months && params.months.length > 0) {
+      const monthFilters = params.months.map((m) => `month = "${m}"`).join(' || ');
+      filterParts.push(`(${monthFilters})`);
+    }
+    if (params.cards && params.cards.length > 0) {
+      const cardFilters = params.cards.map((c) => `card = "${c}"`).join(' || ');
+      filterParts.push(`(${cardFilters})`);
+    }
+
+    filterParts.push(`category = "${category}"`);
+    filterParts.push(`category != "Exclude"`);
+    filterParts.push(`amount >= 0`);
+
+    const filter = filterParts.join(' && ');
+
+    const records = await pb.collection('expenses').getFullList<Expense>({
+      filter,
+      sort: '-amount',
+      fields: 'id,amount,date,card_member,description,month,year,card',
+    });
+
+    return { data: records, error: null };
+  } catch (error) {
     console.error('Error fetching expenses:', error);
+    return { data: [], error };
   }
-
-  return { data, error };
 };
 
 export const fetchCategoryExpenses = async (params: ExpensesInput) => {
-  const { data, error } = await supabase.rpc('category_expenses', {
-    month_list: params.months,
-    card_list: params.cards,
-    year_list: params.years,
-  });
+  try {
+    const filterParts: string[] = [];
 
-  if (error) {
-    console.error('Error fetching expenses:', error);
+    if (params.years && params.years.length > 0) {
+      const yearFilters = params.years.map((y) => `year = ${Number(y)}`).join(' || ');
+      filterParts.push(`(${yearFilters})`);
+    }
+    if (params.months && params.months.length > 0) {
+      const monthFilters = params.months.map((m) => `month = "${m}"`).join(' || ');
+      filterParts.push(`(${monthFilters})`);
+    }
+    if (params.cards && params.cards.length > 0) {
+      const cardFilters = params.cards.map((c) => `card = "${c}"`).join(' || ');
+      filterParts.push(`(${cardFilters})`);
+    }
+
+    const filter = filterParts.length > 0 ? filterParts.join(' && ') : '';
+
+    const records = await pb.collection('category_expenses_summary').getFullList<{
+      category: string;
+      count: number;
+      total: number;
+    }>({ filter });
+
+    const aggregated: Record<string, { category: string; count: number; total: number }> = {};
+    for (const r of records) {
+      if (!aggregated[r.category]) {
+        aggregated[r.category] = { category: r.category, count: 0, total: 0 };
+      }
+      const agg = aggregated[r.category]!;
+      agg.count += r.count;
+      agg.total += r.total;
+    }
+
+    return { data: Object.values(aggregated), error: null };
+  } catch (error) {
+    console.error('Error fetching category expenses:', error);
+    return { data: [], error };
   }
-
-  return { data, error };
 };
 
 export const updateCategoryOnExpenses = async (category: string, expenseIds: string[]) => {
-  const { data, error } = await supabase.from('expenses').update({ category }).in('id', expenseIds);
+  try {
+    const batch = pb.createBatch();
+    for (const id of expenseIds) {
+      batch.collection('expenses').update(id, { category });
+    }
+    await batch.send();
+  } catch (error) {
+    console.error('Error updating category on expenses:', error);
+  }
 };
 
 export const deleteExpenses = async (expenseIds: string[]) => {
-  const { data, error } = await supabase.from('expenses').delete().in('id', expenseIds);
-
-  if (error) {
+  try {
+    const batch = pb.createBatch();
+    for (const id of expenseIds) {
+      batch.collection('expenses').delete(id);
+    }
+    const data = await batch.send();
+    return { data, error: null };
+  } catch (error) {
     console.error('Error deleting expenses:', error);
+    return { data: null, error };
   }
-
-  return { data, error };
 };
 
 export const fetchDashboardData = async (params?: ExpensesInput) => {
-  let query = supabase.from('get_dashboard').select('*');
-  if (params?.years?.length) {
-    query = query.in('year', params.years.map(Number));
+  try {
+    let filter = '';
+    if (params?.years?.length) {
+      filter = params.years.map((y) => `year = ${Number(y)}`).join(' || ');
+    }
+    const records = await pb.collection('get_dashboard').getFullList<{
+      id: string;
+      year: number;
+      category: string;
+      amount: number;
+    }>({ filter });
+
+    return { data: records, error: null };
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    return { data: [], error };
   }
-  return await query;
 };
 
 export const fetchCategorisedExpensesByMonths = async (category: string) => {
-  const { data, error } = await supabase
-    .from('expenses')
-    .select('month, amount.sum()')
-    .gt('amount', 0)
-    .eq('category', category);
+  try {
+    const records = await pb.collection('category_expenses_summary').getFullList<{
+      month: string;
+      category: string;
+      total: number;
+    }>({
+      filter: `category = "${category}"`,
+    });
 
-  return { data, error };
+    const aggregated: Record<string, number> = {};
+    for (const r of records) {
+      aggregated[r.month] = (aggregated[r.month] || 0) + r.total;
+    }
+
+    const data = Object.keys(aggregated).map((month) => ({
+      month,
+      sum: aggregated[month],
+    }));
+
+    return { data, error: null };
+  } catch (error) {
+    console.error('Error fetching monthly categorised expenses:', error);
+    return { data: [], error };
+  }
 };
 
 export const fetchExpensesByMonth = async (month: string, category: string) => {
-  const { data, error } = await supabase
-    .from('expenses')
-    .select(EXPENSES_COLS)
-    .gt('amount', 0)
-    .eq('month', month)
-    .eq('category', category)
-    .order('amount', { ascending: false });
-
-  return { data, error };
+  try {
+    const records = await pb.collection('expenses').getFullList<Expense>({
+      filter: `month = "${month}" && category = "${category}" && amount > 0`,
+      sort: '-amount',
+      fields: EXPENSES_COLS,
+    });
+    return { data: records, error: null };
+  } catch (error) {
+    console.error('Error fetching expenses by month:', error);
+    return { data: [], error };
+  }
 };
 
 export const searchExpenses = async (query: string, includeExcluded: boolean = false) => {
-  let queryBuilder = supabase
-    .from('expenses')
-    .select(EXPENSES_COLS)
-    .or(`description.ilike.%${query}%,differentiator.ilike.%${query}%,category.ilike.%${query}%`);
-
-  if (!includeExcluded) {
-    queryBuilder = queryBuilder.neq('category', 'Exclude');
+  try {
+    let filter = `description ~ "${query}" || differentiator ~ "${query}" || category ~ "${query}"`;
+    if (!includeExcluded) {
+      filter = `(${filter}) && category != "Exclude"`;
+    }
+    const records = await pb.collection('expenses').getFullList<Expense>({
+      filter,
+      sort: '-amount',
+      fields: EXPENSES_COLS,
+    });
+    return { data: records, error: null };
+  } catch (error) {
+    console.error('Error searching expenses:', error);
+    return { data: [], error };
   }
-
-  const { data, error } = await queryBuilder.order('amount', { ascending: false });
-
-  return { data, error };
 };
 
 export const fetchYears = async () => {
-  const { data } = await supabase.from('timeline').select('year');
-  return Array.from(new Set(data?.map((d) => d.year))).sort((a, b) => (b || 0) - (a || 0));
+  try {
+    const records = await pb.collection('timeline').getFullList<{ year: number }>({
+      fields: 'year',
+    });
+    const years = Array.from(new Set(records.map((r) => r.year)))
+      .filter((y): y is number => y !== null && y !== undefined)
+      .sort((a, b) => b - a);
+    return years;
+  } catch (error) {
+    console.error('Error fetching years:', error);
+    return [];
+  }
 };

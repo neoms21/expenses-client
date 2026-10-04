@@ -27,7 +27,7 @@ const convertToTreeNode = (timelines: Timeline[]): TreeNode[] => {
           key: `${year}-${month}`,
           label: `${month}`,
           data: `${month}`,
-          children: groupedByMonth[month].map((timeline) => ({
+          children: (groupedByMonth[month] || []).map((timeline) => ({
             key: `${year}-${month}-${timeline.card}`,
             label: `${timeline.card} -  ${timeline.total}`,
             data: `${timeline.card}`,

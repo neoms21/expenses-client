@@ -2,17 +2,16 @@ import type { ExpensesInput } from '@/composables/useReportInputs';
 import { fetchExpenses, deleteExpenses } from '@/lib/expenses';
 
 import { useQuery, useMutation } from '@tanstack/vue-query';
-import { computed, type Ref, type ref } from 'vue';
-import type { Category } from '@/types/index';
+import { computed, type Ref } from 'vue';
 
 const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   const x = nodes.reduce(
     (acc, n) => {
       const [year, month, card] = n.split('-');
 
-      acc.years.add(year);
-      acc.months.add(month);
-      acc.cards.add(card);
+      acc.years.add(year || '');
+      acc.months.add(month || '');
+      acc.cards.add(card || '');
       return acc;
     },
     { years: new Set<string>(), months: new Set<string>(), cards: new Set<string>() },

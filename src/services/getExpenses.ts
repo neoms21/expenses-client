@@ -1,1 +1,1 @@
-const getExpenses = (months: string[]) => {};
+export const getExpenses = (_months?: string[]) => {};

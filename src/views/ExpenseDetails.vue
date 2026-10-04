@@ -57,7 +57,7 @@ const setChartOptions = () => {
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
   return {
-    onClick: function (_evt, item: any) {
+    onClick: function (_evt: any, item: any) {
       setMonth(details.value?.data?.[item?.[0]?.index]?.month || '');
     },
     plugins: {
@@ -104,8 +104,8 @@ const setChartOptions = () => {
       :plugins="[ChartDataLabels]"
       :data="
         setChartData(
-          details?.data?.map((d) => d?.month) || [],
-          details?.data?.map((d) => d?.sum) || [],
+          details?.data?.map((d) => d?.month || '') || [],
+          details?.data?.map((d) => d?.sum || 0) || [],
         )
       "
       :options="chartOptions"

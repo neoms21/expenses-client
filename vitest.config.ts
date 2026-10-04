@@ -5,7 +5,7 @@ import viteConfig from './vite.config';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 export default mergeConfig(
-  viteConfig,
+  viteConfig as any,
   defineConfig({
     plugins: [viteTsconfigPaths()],
     test: {
@@ -16,7 +16,6 @@ export default mergeConfig(
       coverage: {
         provider: 'v8',
         reporter: ['text', 'json', 'html'],
-        all: true,
         include: ['src/**/*.{ts,vue}'],
       },
     },
@@ -25,5 +24,5 @@ export default mergeConfig(
     //     '@': path.resolve(__dirname, './src'),
     //   },
     // },
-  }),
+  }) as any,
 );
