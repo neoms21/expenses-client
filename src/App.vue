@@ -1,11 +1,24 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { computed, onMounted } from 'vue';
+import { RouterView, useRoute } from 'vue-router';
 import HeaderView from './views/HeaderView.vue';
+import { useAuthStore } from './stores/auth';
+
+const route = useRoute();
+const authStore = useAuthStore();
+
+const showHeader = computed(() => authStore.isAuthenticated && route.name !== 'login');
+
+onMounted(() => {
+  if (authStore.isAuthenticated) {
+    authStore.refreshAuth();
+  }
+});
 </script>
 
 <template>
-  <FileUploadDialog />
-  <header class="bg-amber-50">
+  <FileUploadDialog v-if="authStore.isAuthenticated" />
+  <header v-if="showHeader" class="bg-amber-50">
     <HeaderView />
   </header>
 

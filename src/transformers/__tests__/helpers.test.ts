@@ -1,4 +1,4 @@
-import { it, expect, describe, test } from 'vitest';
+import { expect, describe, test } from 'vitest';
 import { assignCategory } from '../helpers';
 
 const categories = [

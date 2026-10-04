@@ -2,9 +2,11 @@
 import { ref, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { Dialogs, useDialogStore } from '@/stores/dialogs';
+import { useAuthStore } from '@/stores/auth';
 
 const toast = useToast();
 const { dialogsVisibility } = useDialogStore();
+const authStore = useAuthStore();
 const apiUrl = import.meta.env.VITE_API_URL;
 
 interface UploadFileItem {
@@ -111,8 +113,14 @@ const uploadFiles = async () => {
   }
 
   try {
+    const headers: Record<string, string> = {};
+    if (authStore.token) {
+      headers['Authorization'] = `Bearer ${authStore.token}`;
+    }
+
     const response = await fetch(apiUrl, {
       method: 'POST',
+      headers,
       body: formData,
     });
 

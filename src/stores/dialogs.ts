@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export enum Dialogs {
@@ -7,13 +7,9 @@ export enum Dialogs {
 
 export const useDialogStore = defineStore('dialogs', () => {
   const dialogsVisibility = ref<Record<Dialogs, boolean>>({ [Dialogs.StatementsUpload]: false });
-  //   const doubleCount = computed(
-  //     () =>
-  //       (
-  //   );
 
-  const setVisibility = (dialog: Dialogs, val: boolean) => {
-    dialogsVisibility.value[dialog] = !dialogsVisibility.value[dialog];
+  const setVisibility = (dialog: Dialogs, val?: boolean) => {
+    dialogsVisibility.value[dialog] = val !== undefined ? val : !dialogsVisibility.value[dialog];
   };
 
   return { dialogsVisibility, setVisibility };

@@ -25,14 +25,47 @@
           <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
         </a>
       </template>
+      <template #end>
+        <div v-if="authStore.isAuthenticated" class="flex items-center gap-3">
+          <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+            <i class="pi pi-user text-gray-500" />
+            <span class="font-medium truncate max-w-48" :title="displayName">
+              {{ displayName }}
+            </span>
+          </div>
+          <Button
+            icon="pi pi-sign-out"
+            severity="secondary"
+            text
+            rounded
+            size="small"
+            title="Sign out"
+            aria-label="Sign out"
+            @click="handleLogout"
+          />
+        </div>
+      </template>
     </Menubar>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { Dialogs, useDialogStore } from '@/stores/dialogs';
-import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
 const { setVisibility } = useDialogStore();
+
+const displayName = computed(() => authStore.userDisplayName);
+
+const handleLogout = () => {
+  authStore.logout();
+  router.push({ name: 'login' });
+};
+
 const items = ref([
   {
     label: 'Expenses',
