@@ -1,0 +1,69 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - pb_migration
+  workflow_dispatch:
+
+# Prevent overlapping deployments for rapid consecutive commits
+concurrency:
+  group: deploy-vps-expenses-client
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        env:
+          VITE_POCKETBASE_URL: ${{ secrets.VITE_POCKETBASE_URL || vars.VITE_POCKETBASE_URL }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL || vars.VITE_API_URL }}
+          VITE_ALLOWED_EMAILS: ${{ secrets.VITE_ALLOWED_EMAILS || vars.VITE_ALLOWED_EMAILS }}
+          VITE_ALLOW_PUBLIC_REGISTRATION: ${{ secrets.VITE_ALLOW_PUBLIC_REGISTRATION || vars.VITE_ALLOW_PUBLIC_REGISTRATION }}
+        run: npm run build
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Add VPS to known_hosts
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_SSH_PORT || '22' }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${VPS_PORT}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts
+
+      - name: Sync build files to VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_SSH_PORT || '22' }}
+          TARGET_DIR: ${{ secrets.VPS_TARGET_DIR || '/var/www/expenses-client' }}
+        run: |
+          # Ensure target directory exists on VPS
+          ssh -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" "mkdir -p ${TARGET_DIR}"
+
+          # Sync build directory contents using rsync
+          rsync -avz --delete \
+            -e "ssh -p ${VPS_PORT}" \
+            dist/ "${VPS_USER}@${VPS_HOST}:${TARGET_DIR}/"
+
+          # Fix permissions so web server can read files
+          ssh -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" "chmod -R 755 ${TARGET_DIR}"
