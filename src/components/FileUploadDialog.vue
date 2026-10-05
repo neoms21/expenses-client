@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/auth';
 const toast = useToast();
 const { dialogsVisibility } = useDialogStore();
 const authStore = useAuthStore();
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = `${import.meta.env.VITE_API_URL}/statements`;
 
 interface UploadFileItem {
   id: string;
