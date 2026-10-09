@@ -13,8 +13,22 @@
       }"
     >
       <template #item="{ item, props, hasSubmenu }">
-        <router-link v-if="item.route" v-slot="{ href, navigate, isExactActive }" :to="item.route" custom>
-          <a v-ripple :href="href" v-bind="props.action" @click="navigate" :class="{ 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold': isExactActive }">
+        <router-link
+          v-if="item.route"
+          v-slot="{ href, navigate, isExactActive }"
+          :to="item.route"
+          custom
+        >
+          <a
+            v-ripple
+            :href="href"
+            v-bind="props.action"
+            @click="navigate"
+            :class="{
+              'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold':
+                isExactActive,
+            }"
+          >
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
           </a>
@@ -50,10 +64,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Dialogs, useDialogStore } from '@/stores/dialogs';
-import { useAuthStore } from '@/stores/auth';
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { Dialogs, useDialogStore } from "@/stores/dialogs";
+import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -63,28 +77,33 @@ const displayName = computed(() => authStore.userDisplayName);
 
 const handleLogout = () => {
   authStore.logout();
-  router.push({ name: 'login' });
+  router.push({ name: "login" });
 };
 
 const items = ref([
   {
-    label: 'Expenses',
-    icon: 'pi pi-palette',
-    route: '/reports',
+    label: "Tracker",
+    icon: "pi pi-mobile",
+    route: "/tracker",
   },
   {
-    label: 'Timeline',
-    icon: 'pi pi-calendar',
-    route: '/',
+    label: "Expenses",
+    icon: "pi pi-palette",
+    route: "/reports",
   },
   {
-    label: 'Search',
-    icon: 'pi pi-search',
-    route: '/search',
+    label: "Timeline",
+    icon: "pi pi-calendar",
+    route: "/",
   },
   {
-    label: 'Upload Statement',
-    icon: 'pi pi-upload',
+    label: "Search",
+    icon: "pi pi-search",
+    route: "/search",
+  },
+  {
+    label: "Upload Statement",
+    icon: "pi pi-upload",
     command: () => {
       setVisibility(Dialogs.StatementsUpload, true);
     },

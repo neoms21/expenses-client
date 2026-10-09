@@ -1,20 +1,20 @@
-import { fetchCategorisedExpensesByMonths } from '@/lib/expenses';
-import { useQuery } from '@tanstack/vue-query';
-import type { Ref } from 'vue';
+import { fetchCategorisedExpensesByMonths } from "@/lib/expenses";
+import { useQuery } from "@tanstack/vue-query";
+import type { Ref } from "vue";
 
 const Months_In_Order = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export const useExpensesDetails = (category: Ref<string>) => {

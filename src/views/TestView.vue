@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
-import axios from 'axios';
+import { ref, computed } from "vue";
+import { useQuery } from "@tanstack/vue-query";
+import axios from "axios";
 // Initialize a QueryClient
 // const queryClient = new QueryClient();
 
@@ -12,7 +12,7 @@ const fetchUserData = async (userId: number) => {
   try {
     const {
       data: { name, hair_color, skin_color, birth_year },
-    } = await axios.get('https://swapi.py4e.com/api/people/' + userId);
+    } = await axios.get("https://swapi.py4e.com/api/people/" + userId);
     return {
       name,
       hair_color,
@@ -20,7 +20,7 @@ const fetchUserData = async (userId: number) => {
       birth_year,
     };
   } catch (error) {
-    console.log('🚀 ~ fetchUserData ~ error:', error);
+    console.log("🚀 ~ fetchUserData ~ error:", error);
     throw new Error(`User with ID ${userId} not found.`);
   }
 
@@ -51,18 +51,18 @@ const fetchUserData = async (userId: number) => {
 // This composable encapsulates the Vue Query logic for fetching user data.
 // It accepts a reactive `userIdRef` (a ref) as a parameter.
 function useUserData(userIdRef: typeof currentUserId) {
-  console.log('🚀 ~ useUserData ~ userIdRef:', userIdRef.value);
+  console.log("🚀 ~ useUserData ~ userIdRef:", userIdRef.value);
   //   const fetchUser = () => {
   const queryResult = useQuery({
     // queryKey must be a reactive array
-    queryKey: computed(() => ['user', userIdRef.value]),
+    queryKey: computed(() => ["user", userIdRef.value]),
     structuralSharing: false,
     // queryFn accesses the value of the ref
     queryFn: () => fetchUserData(userIdRef.value),
     // Query is enabled only if userIdRef.value is truthy
     enabled: computed(() => !!userIdRef.value),
     select: (data) => {
-      console.log('select', data);
+      console.log("select", data);
       return { ...data, fetchedAt: new Date().toISOString() };
     },
     retry: false,
@@ -72,7 +72,7 @@ function useUserData(userIdRef: typeof currentUserId) {
 
   // Destructure reactive properties from queryResult
   const { data, isLoading, isError, error, refetch } = queryResult;
-  console.log('🚀 ~ //fetchUser ~ error:', error.value);
+  console.log("🚀 ~ //fetchUser ~ error:", error.value);
   //   };
 
   // Return the reactive properties
@@ -144,7 +144,7 @@ const selectUser = (id: any) => {
       </div>
 
       <div v-else-if="isError" class="text-center p-4 bg-red-100 text-red-800 rounded-md">
-        Error: {{ error?.message || 'An unknown error occurred' }}
+        Error: {{ error?.message || "An unknown error occurred" }}
       </div>
 
       <div v-else-if="data" class="p-4 bg-green-50 text-gray-900 rounded-md">

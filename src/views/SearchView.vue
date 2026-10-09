@@ -36,12 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useSearchExpenses } from '@/hooks/useSearchExpenses';
-import ExpensesTable from '@/components/ExpensesTable.vue';
+import { ref } from "vue";
+import { useSearchExpenses } from "@/hooks/useSearchExpenses";
+import ExpensesTable from "@/components/ExpensesTable.vue";
 
-const searchInput = ref('');
-const searchQuery = ref('');
+const searchInput = ref("");
+const searchQuery = ref("");
 const includeExcluded = ref(false);
 
 let timeout: ReturnType<typeof setTimeout>;

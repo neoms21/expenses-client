@@ -1,8 +1,8 @@
-import { fetchTimelines } from '@/lib';
-import type { Timeline } from '@/types/index';
+import { fetchTimelines } from "@/lib";
+import type { Timeline } from "@/types/index";
 
-import { groupBy, orderBy } from 'lodash';
-import { parse } from 'date-fns/parse';
+import { groupBy, orderBy } from "lodash";
+import { parse } from "date-fns/parse";
 
 type TreeNode = {
   key: string;
@@ -13,10 +13,10 @@ type TreeNode = {
 };
 
 const convertToTreeNode = (timelines: Timeline[]): TreeNode[] => {
-  const groupedData = groupBy(timelines, 'year');
+  const groupedData = groupBy(timelines, "year");
 
   return Object.keys(groupedData).map((year) => {
-    const groupedByMonth = groupBy(groupedData[year], 'month');
+    const groupedByMonth = groupBy(groupedData[year], "month");
 
     return {
       key: `${year}`,
@@ -42,10 +42,10 @@ const convertToTreeNode = (timelines: Timeline[]): TreeNode[] => {
 const orderTimelinesByMonth = (timelines: Timeline[]): Timeline[] => {
   const dts = timelines.map((timeline) => ({
     ...timeline,
-    dt: parse(`${timeline.month} ${timeline.year} 09:00`, 'MMMM yyyy hh:mm', new Date()),
+    dt: parse(`${timeline.month} ${timeline.year} 09:00`, "MMMM yyyy hh:mm", new Date()),
   }));
 
-  return orderBy(dts, ['dt'], ['asc']);
+  return orderBy(dts, ["dt"], ["asc"]);
 };
 
 export const getTimelines = async () => {

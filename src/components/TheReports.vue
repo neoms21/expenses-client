@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useReportInputs } from '@/composables/useReportInputs';
-import { ref } from 'vue';
-import { useCategoryExpenses } from '@/hooks/useCategoryExpenses';
-import TheExpenses from './TheExpenses.vue';
+import { useReportInputs } from "@/composables/useReportInputs";
+import { ref } from "vue";
+import { useCategoryExpenses } from "@/hooks/useCategoryExpenses";
+import TheExpenses from "./TheExpenses.vue";
 const { inputs } = useReportInputs();
 
 const expandedRows = ref({});

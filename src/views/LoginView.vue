@@ -1,16 +1,24 @@
 <template>
   <div class="min-h-[85vh] flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
+    <div
+      class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8"
+    >
       <!-- Header -->
       <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mb-3">
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mb-3"
+        >
           <i class="pi pi-wallet text-2xl" />
         </div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ isSignUp ? 'Create an account' : 'Welcome back' }}
+          {{ isSignUp ? "Create an account" : "Welcome back" }}
         </h1>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {{ isSignUp ? 'Sign up to start tracking your expenses' : 'Sign in to access your expenses dashboard' }}
+          {{
+            isSignUp
+              ? "Sign up to start tracking your expenses"
+              : "Sign in to access your expenses dashboard"
+          }}
         </p>
       </div>
 
@@ -62,52 +70,46 @@
           />
         </svg>
         <i v-else class="pi pi-spin pi-spinner text-lg" />
-        <span>{{ isGoogleLoading ? 'Connecting to Google...' : 'Continue with Google' }}</span>
+        <span>{{ isGoogleLoading ? "Connecting to Google..." : "Continue with Google" }}</span>
       </button>
-
 
       <p class="mt-6 text-center text-xs text-gray-400">
         Access is restricted to authorized accounts only.
       </p>
     </div>
-
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { ClientResponseError } from 'pocketbase';
-import { useAuthStore } from '@/stores/auth';
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { ClientResponseError } from "pocketbase";
+import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-
 const isSignUp = ref(false);
-const errorMessage = ref('');
-const successMessage = ref('');
+const errorMessage = ref("");
+const successMessage = ref("");
 const isSubmitting = ref(false);
 const isGoogleLoading = ref(false);
-
 
 onMounted(() => {
   if (authStore.isAuthenticated && authStore.isEmailAllowed()) {
     navigateToTarget();
     return;
   }
-  if (route.query.error === 'unauthorized') {
-    errorMessage.value = 'Your account is not authorized to access this application.';
+  if (route.query.error === "unauthorized") {
+    errorMessage.value = "Your account is not authorized to access this application.";
   }
 });
 
-
 const navigateToTarget = async () => {
-  let redirect = (route.query.redirect as string) || '/';
-  if (!redirect || redirect === '/login' || redirect.startsWith('/login')) {
-    redirect = '/';
+  let redirect = (route.query.redirect as string) || "/";
+  if (!redirect || redirect === "/login" || redirect.startsWith("/login")) {
+    redirect = "/";
   }
   try {
     const failure = await router.replace(redirect);
@@ -115,42 +117,41 @@ const navigateToTarget = async () => {
       window.location.assign(redirect);
     }
   } catch (err) {
-    console.warn('router.replace failed, using window.location fallback:', err);
+    console.warn("router.replace failed, using window.location fallback:", err);
     window.location.assign(redirect);
   }
 };
 
 const handleGoogleSignIn = async () => {
-  errorMessage.value = '';
-  successMessage.value = '';
+  errorMessage.value = "";
+  successMessage.value = "";
   isGoogleLoading.value = true;
   try {
-    await authStore.loginWithOAuth2('google');
+    await authStore.loginWithOAuth2("google");
     navigateToTarget();
   } catch (err: unknown) {
-    console.error('Google OAuth error:', err);
+    console.error("Google OAuth error:", err);
     const pbErr = err instanceof ClientResponseError ? err : null;
-    const errMessage = err instanceof Error ? err.message : '';
+    const errMessage = err instanceof Error ? err.message : "";
 
-    if (errMessage.includes('Access denied')) {
+    if (errMessage.includes("Access denied")) {
       errorMessage.value = errMessage;
     } else if (
-      errMessage.includes('OAuth2 provider is not enabled') ||
-      errMessage.includes('not enabled')
+      errMessage.includes("OAuth2 provider is not enabled") ||
+      errMessage.includes("not enabled")
     ) {
       errorMessage.value =
-        'Google OAuth2 is not enabled in PocketBase. Please enable Google provider under PocketBase Admin > Collections > users > Edit > Auth Methods > OAuth2.';
-    } else if (pbErr?.status === 400 || errMessage.includes('Failed to authenticate')) {
+        "Google OAuth2 is not enabled in PocketBase. Please enable Google provider under PocketBase Admin > Collections > users > Edit > Auth Methods > OAuth2.";
+    } else if (pbErr?.status === 400 || errMessage.includes("Failed to authenticate")) {
       errorMessage.value =
-        'Access denied: Your Google account is not authorized to access this application. Please contact the administrator.';
-    } else if (pbErr?.isAbort || errMessage.includes('abort')) {
-      errorMessage.value = 'Sign-in window was closed.';
+        "Access denied: Your Google account is not authorized to access this application. Please contact the administrator.";
+    } else if (pbErr?.isAbort || errMessage.includes("abort")) {
+      errorMessage.value = "Sign-in window was closed.";
     } else {
-      errorMessage.value = errMessage || 'Google sign-in failed.';
+      errorMessage.value = errMessage || "Google sign-in failed.";
     }
   } finally {
     isGoogleLoading.value = false;
   }
 };
-
 </script>

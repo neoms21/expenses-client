@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useReportInputs } from '@/composables/useReportInputs';
-import { ref, onMounted } from 'vue';
-import { getTimelines } from '@/services';
+import { useReportInputs } from "@/composables/useReportInputs";
+import { ref, onMounted } from "vue";
+import { getTimelines } from "@/services";
 
 const nodes = ref();
 const selectedKey = ref({});

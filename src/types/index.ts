@@ -1,4 +1,4 @@
-import type { TreeNode } from 'primevue/treenode';
+import type { TreeNode } from "primevue/treenode";
 
 export interface Category {
   id: string;
@@ -6,7 +6,7 @@ export interface Category {
   items: string[];
 }
 
-export type CategoryWithoutId = Omit<Category, 'id'>;
+export type CategoryWithoutId = Omit<Category, "id">;
 
 export interface Expense {
   id: string;
@@ -35,7 +35,7 @@ export interface StrictTreeNode<T> extends TreeNode {
   children?: StrictTreeNode<T>[];
 }
 
-export type UiExpense = Omit<Expense, 'card' | 'differentiator'>;
+export type UiExpense = Omit<Expense, "card" | "differentiator">;
 
 export type CategorisedExpenses = {
   category: string;

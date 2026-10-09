@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UiExpense } from '@/types/index';
+import type { UiExpense } from "@/types/index";
 
 defineProps<{
   value: Array<Partial<UiExpense>>;
@@ -54,7 +54,7 @@ defineProps<{
 }>();
 
 defineEmits<{
-  (e: 'update:selection', value: Array<UiExpense>): void;
-  (e: 'assign-category', row: UiExpense): void;
+  (e: "update:selection", value: Array<UiExpense>): void;
+  (e: "assign-category", row: UiExpense): void;
 }>();
 </script>

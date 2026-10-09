@@ -108,13 +108,13 @@
 </template>
 
 <script setup lang="ts">
-import { useDeleteExpenses } from '@/hooks/useExpenses';
-import type { UiExpense } from '@/types/index';
-import { useDialog } from 'primevue/usedialog';
-import { ref, computed, watch } from 'vue';
+import { useDeleteExpenses } from "@/hooks/useExpenses";
+import type { UiExpense } from "@/types/index";
+import { useDialog } from "primevue/usedialog";
+import { ref, computed, watch } from "vue";
 
-import TheCategories from '@/components/TheCategories.vue';
-import ExpensesBaseTable from '@/components/ExpensesBaseTable.vue';
+import TheCategories from "@/components/TheCategories.vue";
+import ExpensesBaseTable from "@/components/ExpensesBaseTable.vue";
 
 export type ExpensesTableProps = {
   expenses: Array<Partial<UiExpense>>;
@@ -146,11 +146,11 @@ const onAccordionChange = (value: string | string[] | null | undefined) => {
 };
 
 const groupOptions = [
-  { label: 'None', value: null },
-  { label: 'Description', value: 'description' },
-  { label: 'Amount', value: 'amount' },
-  { label: 'Category', value: 'category' },
-  { label: 'Date', value: 'date' },
+  { label: "None", value: null },
+  { label: "Description", value: "description" },
+  { label: "Amount", value: "amount" },
+  { label: "Category", value: "category" },
+  { label: "Date", value: "date" },
 ];
 
 const groupedExpenses = computed(() => {
@@ -160,7 +160,7 @@ const groupedExpenses = computed(() => {
 
   expenses.forEach((e) => {
     const rawVal = e[field];
-    const key = rawVal === undefined || rawVal === null ? 'Unassigned' : String(rawVal);
+    const key = rawVal === undefined || rawVal === null ? "Unassigned" : String(rawVal);
     if (!groupsMap[key]) {
       groupsMap[key] = [];
     }
@@ -210,12 +210,12 @@ const showAssignCategory = () => {
     props: {
       showHeader: false,
       style: {
-        width: '75vw',
+        width: "75vw",
       },
       breakpoints: {
-        '1200px': '85vw',
-        '768px': '90vw',
-        '576px': '95vw',
+        "1200px": "85vw",
+        "768px": "90vw",
+        "576px": "95vw",
       },
       modal: true,
     },
@@ -237,12 +237,12 @@ const showAssignCategoryForRow = (rowExpense: UiExpense) => {
     props: {
       showHeader: false,
       style: {
-        width: '75vw',
+        width: "75vw",
       },
       breakpoints: {
-        '1200px': '85vw',
-        '768px': '90vw',
-        '576px': '95vw',
+        "1200px": "85vw",
+        "768px": "90vw",
+        "576px": "95vw",
       },
       modal: true,
     },
@@ -269,7 +269,7 @@ const handleDeleteSelected = async () => {
     selectedExpenses.value = [];
     await refetchFn();
   } catch (err) {
-    console.error('Error deleting expenses:', err);
+    console.error("Error deleting expenses:", err);
   }
 };
 </script>

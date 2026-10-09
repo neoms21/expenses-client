@@ -1,11 +1,11 @@
-import { fetchCategories, insertCategory, updateCategory } from '@/lib/categories';
-import { updateCategoryOnExpenses } from '@/lib/expenses';
-import type { Category, CategoryWithoutId } from '@/types/index';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
+import { fetchCategories, insertCategory, updateCategory } from "@/lib/categories";
+import { updateCategoryOnExpenses } from "@/lib/expenses";
+import type { Category, CategoryWithoutId } from "@/types/index";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 
 export function useCategories() {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: ["categories"],
     queryFn: () => fetchCategories(),
     staleTime: Infinity,
     structuralSharing: false,
@@ -17,7 +17,7 @@ export function useInsertCategory() {
   return useMutation({
     mutationFn: (category: CategoryWithoutId) => insertCategory(category),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
 }
@@ -28,7 +28,7 @@ export function useUpdateCategory() {
     mutationFn: ({ category, newItems }: { category: Category; newItems: string[] }) =>
       updateCategory(category, newItems),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
 }
@@ -43,9 +43,9 @@ export function useUpdateCategoryOnExpenses() {
         predicate: (query) => {
           const key = query.queryKey[0];
           return (
-            key === 'categories' ||
-            (typeof key === 'string' &&
-              (key.startsWith('expenses') || key.startsWith('category-expenses')))
+            key === "categories" ||
+            (typeof key === "string" &&
+              (key.startsWith("expenses") || key.startsWith("category-expenses")))
           );
         },
       });

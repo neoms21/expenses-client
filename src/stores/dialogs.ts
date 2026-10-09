@@ -1,11 +1,11 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
+import { ref } from "vue";
+import { defineStore } from "pinia";
 
 export enum Dialogs {
   StatementsUpload,
 }
 
-export const useDialogStore = defineStore('dialogs', () => {
+export const useDialogStore = defineStore("dialogs", () => {
   const dialogsVisibility = ref<Record<Dialogs, boolean>>({ [Dialogs.StatementsUpload]: false });
 
   const setVisibility = (dialog: Dialogs, val?: boolean) => {

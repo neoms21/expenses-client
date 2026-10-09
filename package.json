@@ -16,7 +16,7 @@
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix",
     "lint": "run-s lint:*",
-    "format": "prettier --write src/",
+    "format": "prettier --write .",
     "generate:types": "npx supabase gen types typescript --project-id hponunbjscywqyfufckr > src/lib/database.types.ts"
   },
   "dependencies": {

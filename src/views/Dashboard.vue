@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ExpensesDashboard from '@/components/ExpensesDashboard.vue';
-import { useYears } from '@/hooks/useDashboardData';
-import { useReportInputs } from '@/composables/useReportInputs';
-import { ref, watch } from 'vue';
+import ExpensesDashboard from "@/components/ExpensesDashboard.vue";
+import { useYears } from "@/hooks/useDashboardData";
+import { useReportInputs } from "@/composables/useReportInputs";
+import { ref, watch } from "vue";
 
 const { data: years } = useYears();
 const { inputs } = useReportInputs();

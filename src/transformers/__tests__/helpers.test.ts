@@ -1,23 +1,23 @@
-import { expect, describe, test } from 'vitest';
-import { assignCategory } from '../helpers';
+import { expect, describe, test } from "vitest";
+import { assignCategory } from "../helpers";
 
 const categories = [
-  { id: '10', category: 'Squash', items: ['Sando', 'meadHurST'] },
-  { id: '10', category: 'Shrey', items: ['Vanshika'] },
-  { id: '10', category: 'Online', items: ['Paypal', 'Amazon', 'amzn'] },
-  { id: '10', category: 'Holidays', items: ['ssxs', 'xx', 'yy'] },
+  { id: "10", category: "Squash", items: ["Sando", "meadHurST"] },
+  { id: "10", category: "Shrey", items: ["Vanshika"] },
+  { id: "10", category: "Online", items: ["Paypal", "Amazon", "amzn"] },
+  { id: "10", category: "Holidays", items: ["ssxs", "xx", "yy"] },
 ];
 
-describe('helpers  tests', () => {
+describe("helpers  tests", () => {
   const testCases = [
-    { description: 'sando', category: 'Squash' },
-    { description: 'MEADHURsT', category: 'Squash' },
-    { description: 'paypal   ', category: 'Online' },
-    { description: 'Vanshika Paypal', category: 'Shrey' },
+    { description: "sando", category: "Squash" },
+    { description: "MEADHURsT", category: "Squash" },
+    { description: "paypal   ", category: "Online" },
+    { description: "Vanshika Paypal", category: "Shrey" },
   ];
 
   test.each(testCases)(
-    'Suitable category $category is returened for $description',
+    "Suitable category $category is returened for $description",
     ({ description, category }) => {
       const result = assignCategory(description, categories);
 
@@ -25,9 +25,9 @@ describe('helpers  tests', () => {
     },
   );
 
-  test('When tags have the match, category is decided based on that', () => {
-    const result = assignCategory('paypal airbnb', categories, ['holidays']);
+  test("When tags have the match, category is decided based on that", () => {
+    const result = assignCategory("paypal airbnb", categories, ["holidays"]);
 
-    expect(result).toEqual('Holidays');
+    expect(result).toEqual("Holidays");
   });
 });

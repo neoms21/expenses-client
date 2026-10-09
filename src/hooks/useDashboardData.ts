@@ -1,11 +1,11 @@
-import { fetchDashboardData, fetchExpensesByMonth, fetchYears } from '@/lib/expenses';
-import { useQuery } from '@tanstack/vue-query';
-import { computed, type Ref } from 'vue';
-import { extractFromTreeNodes } from './useCategoryExpenses';
+import { fetchDashboardData, fetchExpensesByMonth, fetchYears } from "@/lib/expenses";
+import { useQuery } from "@tanstack/vue-query";
+import { computed, type Ref } from "vue";
+import { extractFromTreeNodes } from "./useCategoryExpenses";
 
 export const useYears = () => {
   return useQuery({
-    queryKey: ['available-years'],
+    queryKey: ["available-years"],
     queryFn: () => fetchYears(),
     staleTime: Infinity,
   });
@@ -19,7 +19,7 @@ export const useDashboardData = (inputs: Ref<string[]>) => {
     select: (data) => {
       const rows = data.data || [];
       const pivoted = rows.reduce((acc: any, row: any) => {
-        const category = row.category || 'Uncategorized';
+        const category = row.category || "Uncategorized";
         const year = row.year;
         if (!acc[category]) {
           acc[category] = { category };

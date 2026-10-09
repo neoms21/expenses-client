@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, watch, computed } from 'vue';
-import type { Category, UiExpense } from '@/types/index';
+import { ref, inject, onMounted, watch, computed } from "vue";
+import type { Category, UiExpense } from "@/types/index";
 import {
   useCategories,
   useInsertCategory,
   useUpdateCategory,
   useUpdateCategoryOnExpenses,
-} from '@/hooks/useCategories';
-import { extractTagsFromDescription } from '@/utils/extractTags';
-import { useToast } from 'primevue/usetoast';
-import { searchExpenses } from '@/lib/expenses';
+} from "@/hooks/useCategories";
+import { extractTagsFromDescription } from "@/utils/extractTags";
+import { useToast } from "primevue/usetoast";
+import { searchExpenses } from "@/lib/expenses";
 
 const toast = useToast();
-const dialogRef: any = inject('dialogRef');
+const dialogRef: any = inject("dialogRef");
 const expense = ref<UiExpense>();
 const selectedExpenseIds = ref<string[]>([]);
-const searchQuery = ref('');
+const searchQuery = ref("");
 const showCreateNewCategory = ref(false);
 
 const tags = ref<
@@ -30,11 +30,11 @@ onMounted(() => {
   expense.value = params.expense;
   selectedExpenseIds.value = params.expenseIds || [];
   tags.value = extractTagsFromDescription(expense.value?.description);
-  newManualTag.value = expense.value?.description || '';
+  newManualTag.value = expense.value?.description || "";
 });
 
 // Define the emit event
-const emit = defineEmits(['onSuccessfulSave']);
+const emit = defineEmits(["onSuccessfulSave"]);
 const { data: result } = useCategories();
 
 const { mutateAsync: insertCategory } = useInsertCategory();
@@ -43,8 +43,8 @@ const { mutateAsync: updateCategoryOnExpenses } = useUpdateCategoryOnExpenses();
 
 const selectedTags = ref([]);
 const selectedCategory = ref<Category>();
-const newCategory = ref('');
-const newManualTag = ref('');
+const newCategory = ref("");
+const newManualTag = ref("");
 
 watch(newCategory, (val) => {
   if (val) {
@@ -54,7 +54,7 @@ watch(newCategory, (val) => {
 
 watch(selectedCategory, (val) => {
   if (val) {
-    newCategory.value = '';
+    newCategory.value = "";
   }
 });
 
@@ -93,17 +93,17 @@ const closeDialog = () => {
 };
 
 const saveExpenseToCategory = async () => {
-  let categoryName = '';
+  let categoryName = "";
   let categoryTags: string[] = newManualTag.value ? [newManualTag.value] : [...selectedTags.value];
 
   try {
     if (selectedExpenseIds.value.length > 1) {
-      categoryName = newCategory.value || selectedCategory.value?.category || 'Uncategorized';
+      categoryName = newCategory.value || selectedCategory.value?.category || "Uncategorized";
       await updateCategoryOnExpenses({
         category: categoryName,
         expenseIds: selectedExpenseIds.value,
       });
-      emit('onSuccessfulSave', {
+      emit("onSuccessfulSave", {
         category: categoryName,
         items: categoryTags,
       });
@@ -130,7 +130,7 @@ const saveExpenseToCategory = async () => {
 
     // Check for other expenses matching the rules
     const { data: matchingExpenses } = await searchExpenses(
-      newManualTag?.value || categoryTags.join(' '),
+      newManualTag?.value || categoryTags.join(" "),
     );
 
     if (matchingExpenses && matchingExpenses.length > 0) {
@@ -149,7 +149,7 @@ const saveExpenseToCategory = async () => {
       await updateCategoryOnExpenses({ category: categoryName, expenseIds: [expense.value.id] });
     }
 
-    emit('onSuccessfulSave', {
+    emit("onSuccessfulSave", {
       category: categoryName,
       items: categoryTags,
     });
@@ -158,11 +158,11 @@ const saveExpenseToCategory = async () => {
       dialogRef.value.close(true);
     }
   } catch (error: any) {
-    console.error('Error saving category rules:', error);
+    console.error("Error saving category rules:", error);
     toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: error.message || 'Failed to save category rules.',
+      severity: "error",
+      summary: "Error",
+      detail: error.message || "Failed to save category rules.",
       life: 5000,
     });
   }
@@ -411,7 +411,7 @@ const isSaveDisabled = () => {
           <div class="flex justify-between items-center">
             <span>Target Category:</span>
             <span class="font-extrabold text-slate-800 dark:text-slate-200">
-              {{ newCategory || selectedCategory?.category || 'None Selected' }}
+              {{ newCategory || selectedCategory?.category || "None Selected" }}
             </span>
           </div>
           <div
@@ -422,7 +422,7 @@ const isSaveDisabled = () => {
             <span
               class="font-extrabold text-slate-800 dark:text-slate-200 max-w-[200px] truncate text-right"
             >
-              {{ newManualTag || selectedTags.join(', ') || 'None' }}
+              {{ newManualTag || selectedTags.join(", ") || "None" }}
             </span>
           </div>
         </div>

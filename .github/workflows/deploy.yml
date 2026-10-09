@@ -35,7 +35,6 @@ jobs:
             @tailwindcss/oxide-linux-x64-gnu \
             @esbuild/linux-x64
 
-
       - name: Build production bundle
         env:
           VITE_POCKETBASE_URL: ${{ secrets.VITE_POCKETBASE_URL || vars.VITE_POCKETBASE_URL }}

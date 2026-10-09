@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/vue';
-import TheCategories from '../TheCategories.vue';
-import { ref, defineComponent } from 'vue';
-import PrimeVue from 'primevue/config';
-import ToastService from 'primevue/toastservice';
-import type { UiExpense } from '@/types/index';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
+import TheCategories from "../TheCategories.vue";
+import { ref, defineComponent } from "vue";
+import PrimeVue from "primevue/config";
+import ToastService from "primevue/toastservice";
+import type { UiExpense } from "@/types/index";
 
 const { mockInsertCategory, mockUpdateCategory, mockUpdateCategoryOnExpenses, mockSearchExpenses } =
   vi.hoisted(() => ({
@@ -14,20 +14,20 @@ const { mockInsertCategory, mockUpdateCategory, mockUpdateCategoryOnExpenses, mo
     mockSearchExpenses: vi.fn(() =>
       Promise.resolve({
         data: [
-          { id: 'exp-2', description: 'Lidl groceries' },
-          { id: 'exp-3', description: 'Lidl shopping' },
+          { id: "exp-2", description: "Lidl groceries" },
+          { id: "exp-3", description: "Lidl shopping" },
         ],
       }),
     ),
   }));
 
-vi.mock('@/hooks/useCategories', () => ({
+vi.mock("@/hooks/useCategories", () => ({
   useCategories: vi.fn(() => ({
     data: ref({
       data: [
-        { id: 1, category: 'Groceries', items: ['Lidl', 'Aldi'] },
-        { id: 2, category: 'Utilities', items: ['Water', 'Electric'] },
-        { id: 3, category: 'Exclude', items: ['Random'] },
+        { id: 1, category: "Groceries", items: ["Lidl", "Aldi"] },
+        { id: 2, category: "Utilities", items: ["Water", "Electric"] },
+        { id: 3, category: "Exclude", items: ["Random"] },
       ],
     }),
   })),
@@ -42,7 +42,7 @@ vi.mock('@/hooks/useCategories', () => ({
   })),
 }));
 
-vi.mock('@/lib/expenses', () => ({
+vi.mock("@/lib/expenses", () => ({
   searchExpenses: mockSearchExpenses,
 }));
 
@@ -50,7 +50,7 @@ const stubs = {
   Checkbox: defineComponent({
     template:
       '<input type="checkbox" :value="value" :checked="isChecked" @change="onChange" data-testid="tag-checkbox" />',
-    props: ['value', 'modelValue'],
+    props: ["value", "modelValue"],
     computed: {
       isChecked(): boolean {
         return Array.isArray(this.modelValue)
@@ -69,9 +69,9 @@ const stubs = {
             const idx = newValue.indexOf(this.value);
             if (idx > -1) newValue.splice(idx, 1);
           }
-          this.$emit('update:modelValue', newValue);
+          this.$emit("update:modelValue", newValue);
         } else {
-          this.$emit('update:modelValue', target.checked);
+          this.$emit("update:modelValue", target.checked);
         }
       },
     },
@@ -79,7 +79,7 @@ const stubs = {
   RadioButton: defineComponent({
     template:
       '<input type="radio" :value="value" :checked="isChecked" @click="onClick" :data-testid="pt?.root?.[\'data-testid\'] || $attrs[\'data-testid\']" />',
-    props: ['value', 'modelValue', 'pt'],
+    props: ["value", "modelValue", "pt"],
     computed: {
       isChecked(): boolean {
         return this.modelValue?.category === this.value?.category;
@@ -87,22 +87,22 @@ const stubs = {
     },
     methods: {
       onClick() {
-        this.$emit('update:modelValue', this.value);
+        this.$emit("update:modelValue", this.value);
       },
     },
   }),
   InputText: defineComponent({
     template:
       '<input type="text" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
-    props: ['modelValue', 'size'],
+    props: ["modelValue", "size"],
   }),
   Button: defineComponent({
     template: '<button :disabled="disabled"><slot /></button>',
-    props: ['disabled'],
+    props: ["disabled"],
   }),
   Toast: true,
   IftaLabel: {
-    template: '<div><slot /></div>',
+    template: "<div><slot /></div>",
   },
 };
 
@@ -126,53 +126,53 @@ const renderTheCategories = (expense: Partial<UiExpense>) => {
   });
 };
 
-describe('TheCategories.vue', () => {
+describe("TheCategories.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     window.confirm = vi.fn(() => true);
   });
 
-  it('renders the component with description and extracted tags', async () => {
+  it("renders the component with description and extracted tags", async () => {
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl food groceries',
+      id: "test-expense",
+      description: "Lidl food groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
     expect(await screen.findByText(/Lidl food groceries - 45.99/i)).toBeDefined();
 
-    const checkboxes = await screen.findAllByTestId('tag-checkbox');
+    const checkboxes = await screen.findAllByTestId("tag-checkbox");
     expect(checkboxes).toHaveLength(3);
   });
 
-  it('allows creating a new category with selected tags', async () => {
+  it("allows creating a new category with selected tags", async () => {
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl food groceries',
+      id: "test-expense",
+      description: "Lidl food groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
-    const checkboxes = (await screen.findAllByTestId('tag-checkbox')) as HTMLInputElement[];
+    const checkboxes = (await screen.findAllByTestId("tag-checkbox")) as HTMLInputElement[];
     await fireEvent.click(checkboxes[0]!); // Lidl
     await fireEvent.click(checkboxes[2]!); // groceries
 
-    const createBtn = screen.getByText('Create New Category');
+    const createBtn = screen.getByText("Create New Category");
     await fireEvent.click(createBtn);
 
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const inputs = screen.getAllByRole("textbox") as HTMLInputElement[];
     const newManualTagInput = inputs[0]!;
-    await fireEvent.update(newManualTagInput, ''); // Clear pre-populated manual tag
+    await fireEvent.update(newManualTagInput, ""); // Clear pre-populated manual tag
     const newCategoryInput = inputs[2]!;
-    await fireEvent.update(newCategoryInput, 'Supermarkets');
+    await fireEvent.update(newCategoryInput, "Supermarkets");
 
-    const saveBtn = screen.getByRole('button', { name: 'Save' });
+    const saveBtn = screen.getByRole("button", { name: "Save" });
     await fireEvent.click(saveBtn);
 
     expect(mockInsertCategory).toHaveBeenCalledWith({
-      category: 'Supermarkets',
-      items: ['Lidl', 'groceries'],
+      category: "Supermarkets",
+      items: ["Lidl", "groceries"],
     });
 
     await waitFor(() => {
@@ -180,28 +180,28 @@ describe('TheCategories.vue', () => {
     });
   });
 
-  it('allows updating an existing category with manual tag', async () => {
+  it("allows updating an existing category with manual tag", async () => {
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl food groceries',
+      id: "test-expense",
+      description: "Lidl food groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
-    await screen.findAllByTestId('tag-checkbox');
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    await screen.findAllByTestId("tag-checkbox");
+    const inputs = screen.getAllByRole("textbox") as HTMLInputElement[];
     const newManualTagInput = inputs[0]!;
-    await fireEvent.update(newManualTagInput, 'Supermarkets'); // Clear pre-populated manual tag
+    await fireEvent.update(newManualTagInput, "Supermarkets"); // Clear pre-populated manual tag
 
-    const radioBtn = screen.getByTestId('Exclude');
+    const radioBtn = screen.getByTestId("Exclude");
     await fireEvent.click(radioBtn);
 
-    const saveBtn = screen.getByRole('button', { name: 'Save' });
+    const saveBtn = screen.getByRole("button", { name: "Save" });
     await fireEvent.click(saveBtn);
 
     expect(mockUpdateCategory).toHaveBeenCalledWith({
-      category: { id: 3, category: 'Exclude', items: ['Random'] },
-      newItems: ['Random', 'Supermarkets'],
+      category: { id: 3, category: "Exclude", items: ["Random"] },
+      newItems: ["Random", "Supermarkets"],
     });
 
     await waitFor(() => {
@@ -209,33 +209,33 @@ describe('TheCategories.vue', () => {
     });
   });
 
-  it('allows creating a new category with new manual tag', async () => {
+  it("allows creating a new category with new manual tag", async () => {
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl food groceries',
+      id: "test-expense",
+      description: "Lidl food groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
-    const checkboxes = (await screen.findAllByTestId('tag-checkbox')) as HTMLInputElement[];
+    const checkboxes = (await screen.findAllByTestId("tag-checkbox")) as HTMLInputElement[];
     await fireEvent.click(checkboxes[0]!); // Lidl
     await fireEvent.click(checkboxes[2]!); // groceries
 
-    const createBtn = screen.getByText('Create New Category');
+    const createBtn = screen.getByText("Create New Category");
     await fireEvent.click(createBtn);
 
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const inputs = screen.getAllByRole("textbox") as HTMLInputElement[];
     const newManualTagInput = inputs[0]!;
-    await fireEvent.update(newManualTagInput, ''); // Clear pre-populated manual tag
+    await fireEvent.update(newManualTagInput, ""); // Clear pre-populated manual tag
     const newCategoryInput = inputs[2]!;
-    await fireEvent.update(newCategoryInput, 'Supermarkets');
+    await fireEvent.update(newCategoryInput, "Supermarkets");
 
-    const saveBtn = screen.getByRole('button', { name: 'Save' });
+    const saveBtn = screen.getByRole("button", { name: "Save" });
     await fireEvent.click(saveBtn);
 
     expect(mockInsertCategory).toHaveBeenCalledWith({
-      category: 'Supermarkets',
-      items: ['Lidl', 'groceries'],
+      category: "Supermarkets",
+      items: ["Lidl", "groceries"],
     });
 
     await waitFor(() => {
@@ -243,23 +243,23 @@ describe('TheCategories.vue', () => {
     });
   });
 
-  it('prompts bulk assignment if matching expenses are found', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockImplementation(() => true);
+  it("prompts bulk assignment if matching expenses are found", async () => {
+    const confirmSpy = vi.spyOn(window, "confirm").mockImplementation(() => true);
 
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl groceries',
+      id: "test-expense",
+      description: "Lidl groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
-    const radios = (await screen.findAllByRole('radio')) as HTMLInputElement[];
+    const radios = (await screen.findAllByRole("radio")) as HTMLInputElement[];
     await fireEvent.click(radios[0]!); // Groceries category
 
-    const checkboxes = (await screen.findAllByTestId('tag-checkbox')) as HTMLInputElement[];
+    const checkboxes = (await screen.findAllByTestId("tag-checkbox")) as HTMLInputElement[];
     await fireEvent.click(checkboxes[0]!); // Lidl tag
 
-    const saveBtn = screen.getByRole('button', { name: 'Save' });
+    const saveBtn = screen.getByRole("button", { name: "Save" });
     await fireEvent.click(saveBtn);
 
     expect(mockUpdateCategory).toHaveBeenCalled();
@@ -269,29 +269,29 @@ describe('TheCategories.vue', () => {
     );
 
     expect(mockUpdateCategoryOnExpenses).toHaveBeenCalledWith({
-      category: 'Groceries',
-      expenseIds: ['exp-2', 'exp-3'],
+      category: "Groceries",
+      expenseIds: ["exp-2", "exp-3"],
     });
   });
 
-  it('clears selectedCategory when anything is typed in new Category input text', async () => {
+  it("clears selectedCategory when anything is typed in new Category input text", async () => {
     renderTheCategories({
-      id: 'test-expense',
-      description: 'Lidl food groceries',
+      id: "test-expense",
+      description: "Lidl food groceries",
       amount: 45.99,
-      category: 'Uncategorized',
+      category: "Uncategorized",
     });
 
-    const radios = (await screen.findAllByRole('radio')) as HTMLInputElement[];
+    const radios = (await screen.findAllByRole("radio")) as HTMLInputElement[];
     await fireEvent.click(radios[0]!); // Groceries category
     expect(radios[0]!.checked).toBe(true);
 
-    const createBtn = screen.getByText('Create New Category');
+    const createBtn = screen.getByText("Create New Category");
     await fireEvent.click(createBtn);
 
-    const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+    const inputs = screen.getAllByRole("textbox") as HTMLInputElement[];
     const newCategoryInput = inputs[2]!;
-    await fireEvent.update(newCategoryInput, 'Supermarkets');
+    await fireEvent.update(newCategoryInput, "Supermarkets");
 
     expect(radios[0]!.checked).toBe(false);
   });

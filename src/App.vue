@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
-import HeaderView from './views/HeaderView.vue';
-import { useAuthStore } from './stores/auth';
+import { computed, onMounted } from "vue";
+import { RouterView, useRoute } from "vue-router";
+import HeaderView from "./views/HeaderView.vue";
+import { useAuthStore } from "./stores/auth";
 
 const route = useRoute();
 const authStore = useAuthStore();
 
-const showHeader = computed(() => authStore.isAuthenticated && route.name !== 'login');
+const showHeader = computed(
+  () => authStore.isAuthenticated && route.name !== "login" && !route.meta?.hideHeader,
+);
 
 onMounted(() => {
   if (authStore.isAuthenticated) {
@@ -22,7 +24,7 @@ onMounted(() => {
     <HeaderView />
   </header>
 
-  <div class="w-full m-auto lg:max-w-8/10 px-4">
+  <div :class="[route.meta?.hideHeader ? 'w-full m-0 p-0' : 'w-full m-auto lg:max-w-8/10 px-4']">
     <RouterView />
   </div>
   <DynamicDialog />

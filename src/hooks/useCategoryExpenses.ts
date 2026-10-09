@@ -1,17 +1,17 @@
-import type { ExpensesInput } from '@/composables/useReportInputs';
-import { fetchCategoryExpenses } from '@/lib/expenses';
-import { useQuery } from '@tanstack/vue-query';
-import { computed, type Ref } from 'vue';
-import ShortUniqueId from 'short-unique-id';
+import type { ExpensesInput } from "@/composables/useReportInputs";
+import { fetchCategoryExpenses } from "@/lib/expenses";
+import { useQuery } from "@tanstack/vue-query";
+import { computed, type Ref } from "vue";
+import ShortUniqueId from "short-unique-id";
 
 export const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   const x = nodes.reduce(
     (acc, n) => {
-      const [year, month, card] = n.split('-');
+      const [year, month, card] = n.split("-");
 
-      acc.years.add(year || '');
-      acc.months.add(month || '');
-      acc.cards.add(card || '');
+      acc.years.add(year || "");
+      acc.months.add(month || "");
+      acc.cards.add(card || "");
       return acc;
     },
     { years: new Set<string>(), months: new Set<string>(), cards: new Set<string>() },

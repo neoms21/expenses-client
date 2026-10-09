@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import type { Category } from '@/types/index';
-import { useCategories } from '@/hooks/useCategories';
-import { useToast } from 'primevue';
-import { ref } from 'vue';
+import type { Category } from "@/types/index";
+import { useCategories } from "@/hooks/useCategories";
+import { useToast } from "primevue";
+import { ref } from "vue";
 const toast = useToast();
 
 // Define the emit event
-const emit = defineEmits(['categoryAssignment']);
+const emit = defineEmits(["categoryAssignment"]);
 const { data: result } = useCategories();
 
 const selectedCategory = ref<Category>();
 
-const newCategory = ref('');
+const newCategory = ref("");
 
 const saveExpenseToCategory = async () => {
   if (newCategory.value.length < 5 && !selectedCategory.value) {
-    console.error('No category');
+    console.error("No category");
     toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Please enter a new category or select an existing category',
+      severity: "error",
+      summary: "Error",
+      detail: "Please enter a new category or select an existing category",
       life: 3000,
     });
     return;
   }
 
-  emit('categoryAssignment', newCategory.value || selectedCategory?.value?.category);
+  emit("categoryAssignment", newCategory.value || selectedCategory?.value?.category);
 };
 </script>
 <template>

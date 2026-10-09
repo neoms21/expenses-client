@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Dialogs, useDialogStore } from '@/stores/dialogs';
-import { ref } from 'vue';
+import { Dialogs, useDialogStore } from "@/stores/dialogs";
+import { ref } from "vue";
 const { setVisibility } = useDialogStore();
 const visible = ref(false);
 </script>

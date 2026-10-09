@@ -1,22 +1,22 @@
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath } from "node:url";
 
-import { mergeConfig, defineConfig, configDefaults } from 'vitest/config';
-import viteConfig from './vite.config';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
+import { mergeConfig, defineConfig, configDefaults } from "vitest/config";
+import viteConfig from "./vite.config";
+import viteTsconfigPaths from "vite-tsconfig-paths";
 
 export default mergeConfig(
   viteConfig as any,
   defineConfig({
     plugins: [viteTsconfigPaths()],
     test: {
-      environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**', 'src/components/temp.test.ts'],
-      root: fileURLToPath(new URL('./', import.meta.url)),
-      setupFiles: ['./setup.ts'],
+      environment: "jsdom",
+      exclude: [...configDefaults.exclude, "e2e/**", "src/components/temp.test.ts"],
+      root: fileURLToPath(new URL("./", import.meta.url)),
+      setupFiles: ["./setup.ts"],
       coverage: {
-        provider: 'v8',
-        reporter: ['text', 'json', 'html'],
-        include: ['src/**/*.{ts,vue}'],
+        provider: "v8",
+        reporter: ["text", "json", "html"],
+        include: ["src/**/*.{ts,vue}"],
       },
     },
     // resolve: {
