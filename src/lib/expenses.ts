@@ -22,7 +22,7 @@ export const fetchExpenses = async (params: ExpensesInput, category: string) => 
     }
 
     filterParts.push(`category = "${category}"`);
-    filterParts.push(`category != "Exclude"`);
+    if (category !== "Exclude") filterParts.push(`category != "Exclude"`);
     filterParts.push(`amount >= 0`);
 
     const filter = filterParts.join(" && ");

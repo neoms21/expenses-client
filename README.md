@@ -62,3 +62,10 @@ bun test:e2e --debug
 ```sh
 bun lint
 ```
+
+### Prod APIs:
+
+```
+API_URL=https://api.expenses.qubittech.co.uk
+POCKETBASE_URL=https://pbxp.qubittech.co.uk
+```
