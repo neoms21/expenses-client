@@ -12,6 +12,20 @@ import ToastService from "primevue/toastservice";
 
 import { VueQueryPlugin } from "@tanstack/vue-query";
 
+// Auto-sync dark mode class based on system theme preference
+if (typeof window !== "undefined" && window.matchMedia) {
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const updateTheme = (matches: boolean) => {
+    if (matches) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+  updateTheme(mediaQuery.matches);
+  mediaQuery.addEventListener("change", (e) => updateTheme(e.matches));
+}
+
 const app = createApp(App);
 
 app.use(PrimeVue, {
@@ -19,7 +33,7 @@ app.use(PrimeVue, {
     preset: Aura,
     options: {
       prefix: "p",
-      darkModeSelector: "",
+      darkModeSelector: "system",
       cssLayer: false,
     },
   },

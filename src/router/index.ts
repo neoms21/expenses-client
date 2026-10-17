@@ -51,7 +51,7 @@ const router = createRouter({
       path: "/tracker",
       name: "tracker",
       component: () => import("../views/MobileExpenseTrackerView.vue"),
-      meta: { hideHeader: true },
+      meta: { wide: true },
     },
   ],
 });

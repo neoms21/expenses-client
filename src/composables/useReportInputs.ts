@@ -9,7 +9,7 @@ export type ExpensesInput = {
 };
 
 const inputs = ref<string[]>([]);
-export function useReportInputs(treeNodes?: Ref<Record<string, string>>) {
+export function useReportInputs(treeNodes?: Ref<Record<string, { checked: boolean }>>) {
   if (treeNodes)
     watch(treeNodes, (nv) => {
       inputs.value = Object.keys(nv).filter((k) => k.match(REGEX_DATES));

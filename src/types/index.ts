@@ -42,3 +42,10 @@ export type CategorisedExpenses = {
   total: string;
   expenses: Array<UiExpense>;
 };
+
+export type CategorySummary = {
+  name: string;
+  count: number;
+  amount: number;
+  id: string;
+};
