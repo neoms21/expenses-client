@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
-import HeaderView from "./views/HeaderView.vue";
+import HeaderViewV2 from "./views/v2/HeaderViewV2.vue";
 import { useAuthStore } from "./stores/auth";
 
 const route = useRoute();
@@ -20,76 +20,34 @@ onMounted(() => {
 
 <template>
   <FileUploadDialog v-if="authStore.isAuthenticated" />
-  <header v-if="showHeader" class="bg-amber-50">
-    <HeaderView />
-  </header>
 
-  <div :class="[route.meta?.hideHeader ? 'w-full m-0 p-0' : 'w-full m-auto lg:max-w-8/10 px-4']">
-    <RouterView />
+  <!-- Universal Mobile-First Container Frame for Desktop & Mobile -->
+  <div
+    class="min-h-screen bg-[#e2e8f0] dark:bg-slate-950 flex justify-center font-sans antialiased text-slate-800 dark:text-slate-100"
+  >
+    <div
+      :class="[
+        'w-full mx-auto px-4 sm:px-5 pt-4 pb-8 flex flex-col gap-4 bg-[#eff4f9] dark:bg-slate-900 min-h-screen shadow-sm',
+        route.meta?.wide
+          ? 'max-w-md lg:max-w-none lg:px-8 lg:border-x-0 border-x border-slate-300/60 dark:border-slate-800/80'
+          : 'max-w-md border-x border-slate-300/60 dark:border-slate-800/80',
+      ]"
+    >
+      <!-- Universal Header at Top of Every Page -->
+      <HeaderViewV2 v-if="showHeader" />
+
+      <!-- Active Page Content -->
+      <div class="flex-1 w-full">
+        <RouterView />
+      </div>
+    </div>
   </div>
+
   <DynamicDialog />
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style>

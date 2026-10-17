@@ -30,7 +30,7 @@ export const fetchExpenses = async (params: ExpensesInput, category: string) => 
     const records = await pb.collection("expenses").getFullList<Expense>({
       filter,
       sort: "-amount",
-      fields: "id,amount,date,card_member,description,month,year,card",
+      fields: "id,amount,date,card_member,description,month,year,card,category",
     });
 
     return { data: records, error: null };

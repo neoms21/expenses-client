@@ -3,6 +3,7 @@ import { fetchCategoryExpenses } from "@/lib/expenses";
 import { useQuery } from "@tanstack/vue-query";
 import { computed, type Ref } from "vue";
 import ShortUniqueId from "short-unique-id";
+import type { CategorySummary } from "../types";
 
 export const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   const x = nodes.reduce(
@@ -20,7 +21,9 @@ export const extractFromTreeNodes = (nodes: string[]): ExpensesInput => {
   return { years: Array.from(x.years), months: Array.from(x.months), cards: Array.from(x.cards) };
 };
 
-export const useCategoryExpenses = (selectedInputs: Ref<string[]>) => {
+export const useCategoryExpenses = (
+  selectedInputs: Ref<string[]>,
+): { data: Ref<CategorySummary[] | undefined>; refetch: () => void } => {
   const { data, refetch } = useQuery({
     queryKey: computed(() => {
       return [`category-expenses-${selectedInputs.value}`];
@@ -29,11 +32,20 @@ export const useCategoryExpenses = (selectedInputs: Ref<string[]>) => {
     enabled: computed(() => selectedInputs.value?.length > 0),
     queryFn: () => fetchCategoryExpenses(extractFromTreeNodes(selectedInputs.value)),
     select: (data) => {
-      return data.data?.map((d) => ({
-        category: d.category,
-        amount: d.total,
-        id: new ShortUniqueId().rnd(),
-      }));
+      const isUnknown = (name: string) => name?.toLowerCase() === "unknown";
+      return (
+        data.data
+          ?.map((d) => ({
+            name: d.category,
+            amount: d.total,
+            count: d.count,
+            id: new ShortUniqueId().rnd(),
+          }))
+          .sort((a, b) => {
+            if (isUnknown(a.name) !== isUnknown(b.name)) return isUnknown(a.name) ? -1 : 1;
+            return Number(b.amount) - Number(a.amount);
+          }) || []
+      );
     },
     staleTime: Infinity,
   });
